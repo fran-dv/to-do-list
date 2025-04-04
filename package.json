@@ -1,0 +1,18 @@
+{
+  "name": "to-do-list",
+  "version": "1.0.0",
+  "main": "/src/index.js",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack serve"
+  },
+  "author": "fran-dv",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.3",
+    "mini-css-extract-plugin": "^2.9.2",
+    "style-loader": "^4.0.0"
+  }
+}
