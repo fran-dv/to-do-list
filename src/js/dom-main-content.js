@@ -8,8 +8,9 @@ class MainContent {
 
     
 
-    constructor(sectionToLoad = this.#defaultContent){
+    constructor(sectionToLoad = this.#defaultContent, user = null){
         this.loadMainContent(sectionToLoad);
+        
     }
 
 

@@ -1,112 +1,253 @@
 #left-sidebar {
-    width: 23vw;
-    height: 100vh;
-    background-color: var(--secondary-color);
-    padding: 2% 1%;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    gap: 7%;
-    box-shadow: 5px 0px 5px rgb(0, 0, 0, 0.3);
+  flex: none;
+  width: var(--left-sidebar-width);
+  height: 100vh;
+  background-color: var(--secondary-color);
+  padding: 2% 1%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 7%;
+  transition: transform 0.3s ease-in-out;
+}
+
+#left-sidebar.collapsed {
+  transform: translate(-100%);
+}
+
+#left-sidebar::after {
+  position: fixed;
+  content: "";
+  width: var(--left-sidebar-width);
+  height: 100%;
+  background-color: var(--secondary-color);
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#user-preview,
+#options,
+#projects {
+  z-index: 10;
 }
 
 #left-sidebar h2,
 #left-sidebar p {
-    font-family: var(--general-font);
-    color: var(--primary-color);
+  font-family: var(--general-font);
+  color: var(--primary-color);
 }
 
 #user-preview {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 30% 1fr;
-    grid-template-rows: 1.3fr 1fr;
-    gap: 0 1%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30% 1fr;
+  grid-template-rows: 1.3fr 1fr;
+  gap: 0 1%;
 }
 
 .full-name {
-    color: var(--secondary-color);
-    font-size: 2.2vw;
-    font-weight: bolder;
-    grid-column: 2;
-    align-self: end;
+  color: var(--secondary-color);
+  font-size: 2.2vw;
+  font-weight: bolder;
+  grid-column: 2;
+  align-self: end;
 }
 
 .username {
-    grid-column: 2;
-    font-size: 1.5vw;
+  grid-column: 2;
+  font-size: 1.5vw;
 }
 
-
 .photo-circle {
-    width: 85%;
-    grid-row: 1 / -1;
-    border-radius: 100%;
-    aspect-ratio: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    align-self: center;
-    justify-self: center;
-    cursor: pointer;
+  width: 85%;
+  grid-row: 1 / -1;
+  border-radius: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  justify-self: center;
+  cursor: pointer;
+  user-select: none;
 }
 
 .photo-circle .photo-preview {
-    width: 100%;
+  width: 100%;
 }
 
 .photo-circle.empty {
-    background-color: var(--primary-color);
-    border: 2px solid var(--secondary-color);
+  background-color: var(--primary-color);
+  border: 2px solid var(--secondary-color);
 }
 
 .photo-circle.empty .photo-preview {
-    width: 50%;
-}
-
-#options {
-    
+  width: 50%;
 }
 
 #projects > div,
 .option {
-    width: 100%;
-    border-radius: 0.6rem;
-    display: flex;
-    padding: 2% 7%;
-    align-items: center;
-    gap: 5%;
-    cursor: pointer;
+  width: 100%;
+  border-radius: 0.6rem;
+  display: flex;
+  padding: 2% 7%;
+  align-items: center;
+  gap: 5%;
+  cursor: pointer;
+  user-select: none;
 }
 
+.option {
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    white-space: nowrap;
+}
+
+.option::-webkit-scrollbar {
+    display: none;
+}
+
+.add.project > img,
 .projects-collapse > img,
-.option > img{
-    width: 15%;
-    height: auto;
-    filter: brightness(0) saturate(100%) invert(100%) sepia(21%) saturate(671%) hue-rotate(341deg) brightness(106%) contrast(94%);
+.option > img {
+  width: 15%;
+  height: auto;
+  filter: brightness(0) saturate(100%) invert(100%) sepia(21%) saturate(671%)
+    hue-rotate(341deg) brightness(106%) contrast(94%);
 }
-
 
 .projects-collapse > p,
 .option > p {
-    font-size: 2.2vw;
-    font-weight: 500;
+  font-size: 2.2vw;
+  font-weight: 500;
 }
 
 .option:hover,
 .option.selected {
-    background-color: var(--hover-color); 
+  background-color: var(--hover-color);
 }
 
 #projects {
-    margin-top: 5%;
-    margin-bottom: auto;
-
+  margin-top: 5%;
+  margin-bottom: auto;
 }
 
 .projects-collapse {
-    
-    display: flex;
-    justify-content: space-between;
-    
+  display: flex;
+  justify-content: space-between;
+}
+
+.projects-collapse img {
+  transition: transform 0.2s ease-in-out;
+}
+
+.projects-collapse.collapsed img {
+  transform: rotate(0);
+}
+
+.projects-collapse > img {
+  transform: rotate(-90deg);
+}
+
+.project {
+  display: flex;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  margin-top: 3%;
+  font-size: 2vw;
+  
+}
+
+.projects-collapse.collapsed + .user-projects > .add.project,
+.projects-collapse.collapsed + .user-projects > div {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+#projects > .user-projects {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-projects > .add.project {
+  margin-top: 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.9vw;
+  font-weight: bold;
+  border: 2px solid var(--hover-color);
+  border-radius: 0.6rem;
+  padding: 0 3%;
+  margin-left: 7%;
+  align-self: flex-start;
+  width: 60%;
+  min-height: 3.1rem;
+  transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  opacity: 1;
+}
+
+.add.project > img {
+  width: 2.5vw;
+  transition: transform 0.3s ease;
+}
+
+.add.project:hover > img {
+  transform: rotate(90deg);
+}
+
+.add.project:hover,
+.add.project.clicked {
+  width: 70%;
+}
+
+.add.input {
+  width: 100%;
+  outline: none;
+  border: none;
+  background-color: var(--secondary-color);
+  font-size: 1.9vw;
+  font-weight: bold;
+  font-family: var(--general-font);
+  color: var(--primary-color);
+}
+
+input::placeholder {
+  color: var(--hover-color);
+}
+
+.project-warning {
+    width: 85%;
+}
+
+#sidebar-collapse {
+  position: relative;
+  aspect-ratio: 1;
+  width: 6vw;
+  background-color: var(--hover-color);
+  left: 88%;
+  bottom: 45%;
+  border-radius: 100%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 5% 2%;
+  cursor: pointer;
+  user-select: none;
+  z-index: 0;
+  clip-path: inset(0 0 0 -20px);
+}
+
+#sidebar-collapse > img {
+  width: 40%;
+  transform: rotate(90deg);
+  filter: brightness(0) saturate(100%) invert(40%) sepia(54%) saturate(1385%)
+    hue-rotate(323deg) brightness(97%) contrast(88%);
+  transition: transform 0.3s ease-in-out;
+}
+
+#left-sidebar.collapsed #sidebar-collapse > img {
+  transform: rotate(270deg);
 }

@@ -13,9 +13,24 @@
     --hover-color: rgb(231, 152, 146, 0.5);
 
     --general-font: "Cormorant Garamond", sans-serif, serif;
-    --heading-font: "DM Serif Display", serif;;
+    --heading-font: "DM Serif Display", serif;
+
+    --left-sidebar-width: 23vw;
 }
 
 body {
     background-color: var(--primary-color);
+}
+
+main {
+    display: flex;
+}
+
+.hidden {
+    display: none;
+}
+
+#dynamic-content {
+    width: 100%;
+    height: 100%;
 }

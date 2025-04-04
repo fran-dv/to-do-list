@@ -13,7 +13,7 @@
 
     <main>
 
-        <aside id="left-sidebar">
+        <aside id="left-sidebar" class="">
             <div id="user-preview">
                 <div class="photo-circle empty"><img class="photo-preview" src="/src/assets/image/camera.svg" alt="Upload your photo"></div>
                 <h2 class="full-name">Francisco</h2>
@@ -25,18 +25,30 @@
                     <img src="/src/assets/image/inbox.svg" alt="Inbox">
                     <p>Inbox</p>
                 </div>
-                
             </div>
 
             <div id="projects">
-                
-                <div class="option projects-collapse" data-click="projects">
+                <div class="projects-collapse collapsed" data-click="collapse-projects">
                     <p class="">My Projects</p>
                     <img src="/src/assets/image/hand-point.svg" alt="">
                 </div>
+                <div class="user-projects">
+
+                    <div class="add project" data-click="add-project">
+                        <p>Add new</p>
+                        <input class="add input hidden" id="new-project" type="text" maxlength="50" placeholder="Project name">
+                        <img src="/src/assets/image/plus.svg" alt="">
+                    </div>           
+                </div>
+                
             </div>
-            
+        
+            <div id="sidebar-collapse" data-click="collapse-sidebar">
+                <img src="/src/assets/image/arrow-collapse.svg" alt="">
+            </div>
         </aside>
+        
+        
 
         <section id="dynamic-content">
 
