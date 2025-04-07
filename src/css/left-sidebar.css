@@ -3,7 +3,7 @@
   width: var(--left-sidebar-width);
   height: 100vh;
   background-color: var(--secondary-color);
-  padding: 2% 1%;
+  padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -36,6 +36,7 @@
 #left-sidebar p {
   font-family: var(--general-font);
   color: var(--primary-color);
+  line-height: 1.2;
 }
 
 #user-preview {
@@ -48,7 +49,7 @@
 
 .full-name {
   color: var(--secondary-color);
-  font-size: 2.2vw;
+  font-size: 2.5rem;
   font-weight: bolder;
   grid-column: 2;
   align-self: end;
@@ -56,7 +57,8 @@
 
 .username {
   grid-column: 2;
-  font-size: 1.5vw;
+  font-size: 1.5rem;
+  font-weight: 400;
 }
 
 .photo-circle {
@@ -94,33 +96,34 @@
   padding: 2% 7%;
   align-items: center;
   gap: 5%;
-  cursor: pointer;
   user-select: none;
 }
 
 .option {
-    overflow: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    white-space: nowrap;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .option::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .add.project > img,
 .projects-collapse > img,
 .option > img {
-  width: 15%;
+  width: 13%;
   height: auto;
   filter: brightness(0) saturate(100%) invert(100%) sepia(21%) saturate(671%)
     hue-rotate(341deg) brightness(106%) contrast(94%);
 }
 
 .projects-collapse > p,
-.option > p {
-  font-size: 2.2vw;
+.option > p,
+.project {
+  font-size: 2.3rem;
   font-weight: 500;
 }
 
@@ -156,8 +159,6 @@
   opacity: 1;
   transition: opacity 0.2s ease-in-out;
   margin-top: 3%;
-  font-size: 2vw;
-  
 }
 
 .projects-collapse.collapsed + .user-projects > .add.project,
@@ -166,9 +167,17 @@
   transition: opacity 0.2s ease;
 }
 
+.projects-collapse {
+  cursor: pointer;
+}
+
 #projects > .user-projects {
   display: flex;
   flex-direction: column;
+}
+
+#projects .projects-collapse.collapsed + .user-projects > .project {
+  cursor: auto;
 }
 
 .user-projects > .add.project {
@@ -176,21 +185,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.9vw;
+  font-size: 1.9rem;
   font-weight: bold;
   border: 2px solid var(--hover-color);
   border-radius: 0.6rem;
-  padding: 0 3%;
+  padding: 1% 2% 1% 3%;
   margin-left: 7%;
   align-self: flex-start;
-  width: 60%;
-  min-height: 3.1rem;
+  width: 65%;
   transition: width 0.3s ease-in-out, opacity 0.3s ease-in-out;
   opacity: 1;
+  cursor: pointer;
 }
 
 .add.project > img {
-  width: 2.5vw;
+  width: 2.3rem;
   transition: transform 0.3s ease;
 }
 
@@ -208,7 +217,7 @@
   outline: none;
   border: none;
   background-color: var(--secondary-color);
-  font-size: 1.9vw;
+  font-size: 1.9rem;
   font-weight: bold;
   font-family: var(--general-font);
   color: var(--primary-color);
@@ -219,25 +228,31 @@ input::placeholder {
 }
 
 .project-warning {
-    width: 85%;
+  padding: 0.5rem 0;
+  width: 85%;
+  font-size: 1.25rem;
+  line-height: 1;
+  font-weight: 400;
 }
 
 #sidebar-collapse {
-  position: relative;
+  --sbc-width: 7rem;
+  position: fixed;
   aspect-ratio: 1;
-  width: 6vw;
+  width: var(--sbc-width);
+  flex: none;
   background-color: var(--hover-color);
-  left: 88%;
-  bottom: 45%;
+  left: calc(var(--left-sidebar-width) - (var(--sbc-width) / 1.8));
+  top: 50%;
+  bottom: 50%;
   border-radius: 100%;
   display: flex;
   justify-content: end;
   align-items: center;
-  padding: 5% 2%;
+  padding-right: 0.5rem;
   cursor: pointer;
   user-select: none;
   z-index: 0;
-  clip-path: inset(0 0 0 -20px);
 }
 
 #sidebar-collapse > img {
@@ -250,4 +265,8 @@ input::placeholder {
 
 #left-sidebar.collapsed #sidebar-collapse > img {
   transform: rotate(270deg);
+}
+
+.hidden {
+  display: none;
 }

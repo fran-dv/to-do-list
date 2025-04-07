@@ -1,59 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
     <title>To do</title>
-</head>
-<body>
-
+  </head>
+  <body>
     <main>
+      <aside id="left-sidebar" class="">
+        <div id="user-preview">
+          <div class="photo-circle empty" data-click="user-settings">
+            <img
+              class="photo-preview"
+              src="/src/assets/image/camera.svg"
+              alt="Upload your photo"
+            />
+          </div>
+          <h2 class="full-name">Francisco</h2>
+          <p class="username">@fran-dv</p>
+        </div>
 
-        <aside id="left-sidebar" class="">
-            <div id="user-preview">
-                <div class="photo-circle empty"><img class="photo-preview" src="/src/assets/image/camera.svg" alt="Upload your photo"></div>
-                <h2 class="full-name">Francisco</h2>
-                <p class="username">@fran-dv</p>
+        <div id="options">
+          <div class="option inbox" data-click="inbox">
+            <img src="/src/assets/image/inbox.svg" alt="Inbox" />
+            <p>Inbox</p>
+          </div>
+        </div>
+
+        <div id="projects">
+          <div
+            class="projects-collapse collapsed"
+            data-click="collapse-projects"
+          >
+            <p class="">My Projects</p>
+            <img src="/src/assets/image/hand-point.svg" alt="" />
+          </div>
+          <div class="user-projects">
+            <div class="add project" data-click="add-project">
+              <p>Add new</p>
+              <input
+                class="add input hidden"
+                id="new-project"
+                type="text"
+                maxlength="50"
+                placeholder="Project name"
+              />
+              <img src="/src/assets/image/plus.svg" alt="" />
             </div>
+          </div>
+        </div>
 
-            <div id="options">
-                <div class="option inbox" data-click="inbox">
-                    <img src="/src/assets/image/inbox.svg" alt="Inbox">
-                    <p>Inbox</p>
-                </div>
-            </div>
+        <div id="sidebar-collapse" data-click="collapse-sidebar">
+          <img src="/src/assets/image/arrow-collapse.svg" alt="" />
+        </div>
+      </aside>
 
-            <div id="projects">
-                <div class="projects-collapse collapsed" data-click="collapse-projects">
-                    <p class="">My Projects</p>
-                    <img src="/src/assets/image/hand-point.svg" alt="">
-                </div>
-                <div class="user-projects">
-
-                    <div class="add project" data-click="add-project">
-                        <p>Add new</p>
-                        <input class="add input hidden" id="new-project" type="text" maxlength="50" placeholder="Project name">
-                        <img src="/src/assets/image/plus.svg" alt="">
-                    </div>           
-                </div>
-                
-            </div>
-        
-            <div id="sidebar-collapse" data-click="collapse-sidebar">
-                <img src="/src/assets/image/arrow-collapse.svg" alt="">
-            </div>
-        </aside>
-        
-        
-
-        <section id="dynamic-content">
-
-        </section>
+      <section id="dynamic-content"></section>
     </main>
-    
-</body>
+  </body>
 </html>
