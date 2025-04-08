@@ -1,4 +1,5 @@
 import "/src/css/left-sidebar.css";
+import "/src/css/user-settings.css";
 
 const LeftSidebar = (() => {
   const sidebarDiv = document.querySelector("#left-sidebar");
@@ -151,11 +152,34 @@ const LeftSidebar = (() => {
     _listenForSubmit(input, user);
   };
 
+  const clickOnSettingsButton = (user, Settings) => {
+    const settingsDialog = document.querySelector("#settings-dialog");
+    Settings.loadUserInfoInSettings(user);
+    settingsDialog.showModal();
+  };
+
+  const updateUserPreviewInfo = (user) => {
+    const photoParent = document.querySelector(".photo-circle");
+    const photo = document.querySelector(".photo-preview");
+    const name = document.querySelector(".full-name");
+    const username = document.querySelector(".username");
+
+    if (user.photo) {
+      photoParent.classList.remove("empty");
+      photo.src = user.photo;
+    }
+
+    name.textContent = user.fullname;
+    username.textContent = user.username;
+  };
+
   return {
     toggleVisibility,
     updateUserProjects,
     toggleProjectsVisibility,
     clickOnAddProject,
+    clickOnSettingsButton,
+    updateUserPreviewInfo,
   };
 })();
 

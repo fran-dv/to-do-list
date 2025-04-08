@@ -30,11 +30,20 @@ class User {
   }
 
   get photo() {
-    return this.#photo;
+    return localStorage.getItem("userPhoto");
   }
 
-  set photo(photoSrc) {
-    this.#photo = photoSrc;
+  set photo(file) {
+    if (!file || !file.type.startsWith("image/")) {
+      console.error("Invalid image file");
+      return false;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64String = e.target.result;
+      localStorage.setItem("userPhoto", base64String);
+    };
+    reader.readAsDataURL(file);
   }
 
   addProject(title) {
@@ -79,6 +88,22 @@ class User {
         isValid = false;
       }
     });
+
+    return isValid ? title : false;
+  }
+
+  #isValidName(name) {
+    const validNamePattern = /^[a-zA-ZÀ-ÿ\s'-]+$/;
+    return validNamePattern.test(name);
+  }
+
+  validateNameOrUsername(title) {
+    title = String(title);
+    if (this.#isWhiteSpaceOnly(title)) {
+      return null;
+    }
+    title = this.#removeStringWhitespaces(title);
+    let isValid = this.#isValidName(title);
 
     return isValid ? title : false;
   }

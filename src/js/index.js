@@ -4,9 +4,11 @@ import { Project } from "./projects.js";
 import { MainContent } from "./dom-main-content.js";
 import { LeftSidebar } from "./dom-left-sidebar.js";
 import { User } from "./users.js";
+import { Settings } from "./dom-settings.js";
 
 const CurrentUser = new User("Anonymous");
 LeftSidebar.updateUserProjects(CurrentUser);
+LeftSidebar.updateUserPreviewInfo(CurrentUser);
 const Content = new MainContent();
 
 const handlePageClicks = (e) => {
@@ -28,6 +30,26 @@ const handlePageClicks = (e) => {
       break;
     case "add-project":
       LeftSidebar.clickOnAddProject(CurrentUser);
+      break;
+    case "user-settings":
+      LeftSidebar.clickOnSettingsButton(CurrentUser, Settings);
+      break;
+    case "exit-settings":
+      Settings.clickOnExitSettings(CurrentUser);
+      break;
+    case "upload-photo":
+      Settings.clickOnUploadPhoto(CurrentUser);
+      break;
+    case "new-name":
+      Settings.clickOnNewName(CurrentUser);
+      break;
+    case "new-username":
+      Settings.clickOnNewUsername(CurrentUser);
+      break;
+    case "save-settings":
+      e.preventDefault();
+      const saveSettings = true;
+      Settings.clickOnExitSettings(CurrentUser, saveSettings);
       break;
   }
 };

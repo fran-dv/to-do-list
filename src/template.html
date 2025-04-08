@@ -20,11 +20,11 @@
             <img
               class="photo-preview"
               src="/src/assets/image/camera.svg"
-              alt="Upload your photo"
+              alt="Your photo"
             />
           </div>
           <h2 class="full-name">Francisco</h2>
-          <p class="username">@fran-dv</p>
+          <p class="username">fran-dv</p>
         </div>
 
         <div id="options">
@@ -63,6 +63,41 @@
       </aside>
 
       <section id="dynamic-content"></section>
+
+      <dialog id="settings-dialog">
+        <div id="exit-settings" data-click="exit-settings">
+          <img src="/src/assets/image/plus.svg" alt="Exit settings" />
+        </div>
+        <form action="" name="settings" id="settings">
+          <div>
+            <div class="settings-photo-preview empty" data-click="upload-photo">
+              <input
+                class="hidden"
+                type="file"
+                name="photo"
+                accept="image/*"
+                id="photo-input"
+              />
+            </div>
+          </div>
+          <div data-click="new-name">
+            <h2 class="current-name"></h2>
+            <input class="hidden" type="text" name="new-name" id="new-name" />
+          </div>
+          <div data-click="new-username">
+            <p class="current-username"></p>
+            <input
+              class="hidden"
+              type="text"
+              name="new-username"
+              id="new-username"
+            />
+          </div>
+          <div id="save-changes" data-click="save-settings">
+            <button type="submit"><p>Save changes</p></button>
+          </div>
+        </form>
+      </dialog>
     </main>
   </body>
 </html>

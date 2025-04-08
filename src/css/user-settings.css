@@ -1,0 +1,135 @@
+#settings-dialog {
+  margin: 10% auto 0 auto;
+  border: none;
+  border-radius: 1rem;
+  padding: 3rem 10rem;
+  background-color: var(--primary-color);
+}
+
+#settings-dialog::backdrop {
+  background-color: var(--dark-color);
+  opacity: 0.5;
+}
+
+#settings {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+#settings > div {
+  display: flex;
+  justify-content: center;
+}
+
+#exit-settings {
+  width: 2rem;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+#exit-settings > img {
+  width: 100%;
+  transform: rotate(45deg);
+  filter: brightness(0) saturate(100%) invert(4%) sepia(1%) saturate(4016%)
+    hue-rotate(29deg) brightness(100%) contrast(91%);
+  cursor: pointer;
+}
+
+#settings > div > input {
+  width: 100%;
+}
+
+.settings-photo-preview {
+  aspect-ratio: 1;
+  width: 11rem;
+  border: none;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-image: var(--current-uploaded-ph);
+}
+
+.settings-photo-preview.empty,
+.settings-photo-preview:hover {
+  background: no-repeat center/45% var(--empty-photo-url) var(--tertiary-color);
+}
+
+.settings-photo-preview:not(.empty):hover {
+  background-image: var(--current-uploaded-ph);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.settings-photo-preview:not(.empty):hover::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-color-transparent);
+  z-index: 0;
+  border-radius: 100%;
+  background-image: var(--empty-photo-url);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 45%;
+}
+
+#settings-dialog h2,
+#settings-dialog p {
+  font-family: var(--general-font);
+  color: var(--dark-color);
+  line-height: 1.2;
+  text-align: center;
+}
+
+.current-name,
+#new-name {
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+.current-username,
+#new-username {
+  font-size: 1.7rem;
+  font-weight: 400;
+}
+
+.current-username::before,
+#new-username::before {
+  content: "@";
+}
+
+#save-changes {
+  width: 100%;
+  align-self: stretch;
+  display: flex;
+  justify-content: stretch;
+}
+
+#save-changes > button {
+  width: 100%;
+  padding: 0.5rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--secondary-color);
+  align-self: center;
+}
+
+#save-changes > button > p {
+  font-weight: bold;
+  font-size: 1.7rem;
+  color: var(--primary-color);
+}
+
+#save-changes > button:focus {
+  outline: 2px solid var(--tertiary-color);
+}
