@@ -14,7 +14,8 @@
 #settings {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  --settings-gap: 2rem;
+  gap: var(--settings-gap);
   align-items: center;
 }
 
@@ -133,3 +134,22 @@
 #save-changes > button:focus {
   outline: 2px solid var(--tertiary-color);
 }
+
+.settings-warning {
+  width: 100%;
+
+  --vertical-margins: calc(var(--settings-gap) * (-1) + 0.4rem);
+  margin-top: var(--vertical-margins);
+  margin-bottom: var(--vertical-margins);
+}
+
+.settings-warning > p {
+  font-family: var(--general-font);
+  font-size: 1rem;
+  color: var(--hover-color);
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1;
+}
+
+

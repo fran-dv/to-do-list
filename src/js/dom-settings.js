@@ -176,13 +176,65 @@ const Settings = (() => {
     );
   };
 
+  const _settingsWarning = (element=null, msg) => {
+    const parent = document.querySelector('#settings');
+
+    if (!element || !element.classList.contains('settings-child')){
+      console.error('Error: only #settings childs are valid');
+      return;
+    }
+    const existingWarning = parent.querySelector('.settings-warning');
+    if (existingWarning){
+      existingWarning.remove();
+    }
+
+    const warningDiv = document.createElement('div');
+    warningDiv.classList.add('settings-warning')
+    const warningP = document.createElement('p');
+    warningP.textContent = String(msg);
+    warningDiv.appendChild(warningP);
+    element.after(warningDiv);
+
+    const controller = new AbortController();
+
+    const removeWarning = (warningDiv) => {
+      warningDiv.remove();
+      controller.abort();
+      return;
+    }
+
+    const inputChild = element.querySelector('input');
+
+    if (inputChild.id === 'photo-input'){
+      inputChild.addEventListener('click', () => removeWarning(warningDiv), { 
+        signal: controller.signal, 
+      });
+    } else {
+      inputChild.addEventListener('blur', () => removeWarning(warningDiv), { 
+        signal: controller.signal, 
+      });
+      inputChild.addEventListener('keydown', () => removeWarning(warningDiv), { 
+        signal: controller.signal, 
+      });
+    }
+
+    parent.closest('#settings-dialog').addEventListener('close', () => removeWarning(warningDiv), { 
+      signal: controller.signal, 
+    });
+
+  }
+
   const clickOnUploadPhoto = (user) => {
     const uploadPhotoDiv = document.querySelector(".settings-photo-preview");
     const input = document.querySelector("#photo-input");
 
     input.onchange = (e) => {
       const file = e.target.files[0];
-      if (!file || !file.type.startsWith("image/")) {
+      if (!file) {
+        return;
+      }
+      if (!file.type.startsWith("image/")){
+        _settingsWarning(uploadPhotoDiv.closest('.settings-child'), 'Please upload an image file');
         return;
       }
       const photoUrl = URL.createObjectURL(file);
