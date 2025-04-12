@@ -10,6 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=DM+Serif+Display:ital@0;1&display=swap"
       rel="stylesheet"
     />
+    <link rel="icon" type="image/x-icon" href="/src/assets/image/favicon.svg" />
     <title>To do</title>
   </head>
   <body>
@@ -69,7 +70,7 @@
           <img src="/src/assets/image/plus.svg" alt="Exit settings" />
         </div>
         <form action="" name="settings" id="settings">
-          <div class="settings-child">
+          <div class="settings-child photo">
             <div class="settings-photo-preview empty" data-click="upload-photo">
               <input
                 class="hidden"
@@ -82,7 +83,13 @@
           </div>
           <div class="settings-child" data-click="new-name">
             <h2 class="current-name"></h2>
-            <input class="hidden" type="text" name="new-name" id="new-name" />
+            <input
+              class="hidden"
+              type="text"
+              name="new-name"
+              id="new-name"
+              maxlength="25"
+            />
           </div>
           <div class="settings-child" data-click="new-username">
             <p class="current-username"></p>

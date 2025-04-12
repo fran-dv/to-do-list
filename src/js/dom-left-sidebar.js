@@ -1,3 +1,4 @@
+import { Settings } from "./dom-settings";
 import "/src/css/left-sidebar.css";
 import "/src/css/user-settings.css";
 
@@ -31,6 +32,8 @@ const LeftSidebar = (() => {
     user.projects.forEach((project) => {
       projectsList.insertBefore(_createProjectButton(project), addProjectBtn);
     });
+    // update local storage
+    Settings.storeUserLocally(user);
   };
 
   const _resetAddProjectsBtn = () => {
@@ -165,11 +168,14 @@ const LeftSidebar = (() => {
     const username = document.querySelector(".username");
 
     if (user.photo) {
+      console.log("photo: ", user.photo);
       photoParent.classList.remove("empty");
       photo.src = user.photo;
     }
 
-    name.textContent = user.fullname;
+    name.textContent = user.fullname
+      ? user.fullname.split(" ")[0]
+      : "Your name";
     username.textContent = user.username;
   };
 

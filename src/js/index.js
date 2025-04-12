@@ -1,12 +1,14 @@
 import "/src/css/global.css";
-import { Task } from "./tasks.js";
-import { Project } from "./projects.js";
+import { Task } from "./task.js";
+import { Project } from "./project.js";
 import { MainContent } from "./dom-main-content.js";
 import { LeftSidebar } from "./dom-left-sidebar.js";
-import { User } from "./users.js";
+import { User } from "./user.js";
 import { Settings } from "./dom-settings.js";
 
-const CurrentUser = new User("Anonymous");
+
+const CurrentUser = User.getExistingOrCreateNew("Name");
+console.log(CurrentUser.photo);
 LeftSidebar.updateUserProjects(CurrentUser);
 LeftSidebar.updateUserPreviewInfo(CurrentUser);
 const Content = new MainContent();
@@ -38,7 +40,7 @@ const handlePageClicks = (e) => {
       Settings.clickOnExitSettings(CurrentUser);
       break;
     case "upload-photo":
-      Settings.clickOnUploadPhoto(CurrentUser);
+      Settings.clickOnUploadPhoto();
       break;
     case "new-name":
       Settings.clickOnNewName(CurrentUser);

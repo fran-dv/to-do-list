@@ -4,11 +4,16 @@
   border-radius: 1rem;
   padding: 3rem 10rem;
   background-color: var(--primary-color);
+  width: 40rem;
 }
 
 #settings-dialog::backdrop {
   background-color: var(--dark-color);
   opacity: 0.5;
+}
+
+#settings-dialog {
+  box-shadow: 3px 5px 5px rgb(0, 0, 0, 0.3);
 }
 
 #settings {
@@ -37,11 +42,12 @@
   filter: brightness(0) saturate(100%) invert(4%) sepia(1%) saturate(4016%)
     hue-rotate(29deg) brightness(100%) contrast(91%);
   cursor: pointer;
+  transition: transform 0.3s ease-in-out;
 }
 
-#settings > div > input {
-  width: 100%;
-}
+#exit-settings > img:hover {
+  transform: scale(1.1) rotate(135deg);
+} 
 
 .settings-photo-preview {
   aspect-ratio: 1;
@@ -84,7 +90,9 @@
 }
 
 #settings-dialog h2,
-#settings-dialog p {
+#settings-dialog p,
+#settings #new-name,
+#settings #new-username  {
   font-family: var(--general-font);
   color: var(--dark-color);
   line-height: 1.2;
@@ -93,6 +101,7 @@
 
 .current-name,
 #new-name {
+  font-family: var(--general-font);
   font-size: 2.5rem;
   font-weight: 800;
 }
@@ -103,9 +112,24 @@
   font-weight: 400;
 }
 
+.current-name,
+.current-username {
+  cursor: pointer;
+}
+
 .current-username::before,
 #new-username::before {
   content: "@";
+}
+
+#settings #new-name,
+#settings #new-username {
+  border: none;
+  border-bottom: 2px dashed var(--secondary-color);
+  outline: none;
+  background-color: inherit;
+  max-width: 50%;
+  max-height: 80%;
 }
 
 #save-changes {
@@ -123,16 +147,28 @@
   border-radius: 0.5rem;
   background-color: var(--secondary-color);
   align-self: center;
+  transition: transform 0.2s ease-in-out;
+  box-shadow: 2px 4px 5px rgb(0, 0, 0, 0.3);
 }
 
 #save-changes > button > p {
-  font-weight: bold;
-  font-size: 1.7rem;
+  font-weight: bolder;
+  font-size: 1.8rem;
   color: var(--primary-color);
 }
 
+#save-changes > button:hover > p {
+  color: var(--tertiary-color);
+}
+
+
 #save-changes > button:focus {
-  outline: 2px solid var(--tertiary-color);
+  outline: 1px solid var(--dark-color);
+}
+
+#save-changes > button:hover {
+  transform: scale(1.02);
+  
 }
 
 .settings-warning {

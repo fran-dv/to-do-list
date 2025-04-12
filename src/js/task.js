@@ -1,30 +1,4 @@
-class SubTask {
-  #title;
-  #completed;
-
-  constructor(title) {
-    this.#title = title;
-    this.#completed = false;
-  }
-
-  get title() {
-    return this.#title;
-  }
-
-  set title(title) {
-    this.#title = title;
-  }
-
-  get status() {
-    return this.#completed;
-  }
-
-  set status(boolean) {
-    if (typeof boolean === "boolean") {
-      this.#completed = boolean;
-    }
-  }
-}
+import { SubTask } from "./subtask";
 
 class Task {
   #title;
@@ -76,13 +50,33 @@ class Task {
   }
 
   removeSubtask(subtaskIndex) {
-    if (subtaskIndex >= 0 && subtaskIndex < this.#subtasks.length){
-        this.#subtasks.splice(subtaskIndex, 1);
-    };
-    
+    if (subtaskIndex >= 0 && subtaskIndex < this.#subtasks.length) {
+      this.#subtasks.splice(subtaskIndex, 1);
+    }
   }
 
-  get subTasks() {
+  #isSubtasksArray(subtasksArray) {
+    if (!Array.isArray(subtasksArray)) {
+      return false;
+    }
+    subtasksArray.forEach((task) => {
+      if (!(task instanceof SubTask)) {
+        return false;
+      }
+    });
+
+    return true;
+  }
+
+  set subtasks(subtasksArray) {
+    if (!this.#isSubtasksArray(subtasksArray)) {
+      return false;
+    }
+
+    this.#subtasks = this.#subtasks;
+  }
+
+  get subtasks() {
     return this.#subtasks;
   }
 
@@ -113,8 +107,8 @@ class Task {
   }
 
   addTag(tagName) {
-    if (!this.#tags.includes(tagName)){
-        this.#tags.push(String(tagName));
+    if (!this.#tags.includes(tagName)) {
+      this.#tags.push(String(tagName));
     }
   }
 
@@ -125,8 +119,54 @@ class Task {
     }
   }
 
+  #isTagsArray(tagsArray) {
+    if (!Array.isArray(tagsArray)) {
+      return false;
+    }
+    tagsArray.forEach((tag) => {
+      if (typeof tag !== "string") {
+        return false;
+      }
+    });
+
+    return true;
+  }
+
+  set tags(tagsArray) {
+    if (!this.#isTagsArray(tagsArray)) {
+      return false;
+    }
+    this.#tags = tagsArray;
+  }
+
   get tags() {
     return this.#tags;
+  }
+
+  toJSON() {
+    return {
+      title: this.title,
+      description: this.description,
+      status: this.status,
+      subtasks: this.subtasks.map((sub) => sub.toJSON()),
+      dueDate: this.dueDate,
+      priority: this.priority,
+      tags: this.tags,
+    };
+  }
+
+  static getFromJSON(json) {
+    const task = new Task(json.title);
+    task.description = json.description;
+    task.status = json.status;
+    task.subtasks = json.subtasks.map((taskJSON) =>
+      SubTask.getFromJSON(taskJSON)
+    );
+    task.dueDate = json.dueDate;
+    task.priority = json.priority;
+    task.tags = json.tags;
+
+    return task;
   }
 }
 

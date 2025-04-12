@@ -1,11 +1,15 @@
 import { LeftSidebar } from "./dom-left-sidebar";
+import { User } from "./user";
 
 const Settings = (() => {
+  const MAX_FILE_SIZE_MB = 2;
+  const MAX_FILE_SIZE = MAX_FILE_SIZE_MB * 1024 * 1024;
+
   const loadUserInfoInSettings = (user) => {
     const photoPreviewImg = document.querySelector(".settings-photo-preview");
     const currentName = document.querySelector(".current-name");
     const currentUsername = document.querySelector(".current-username");
-    const base64 = localStorage.getItem("userPhoto");
+    const base64 = localStorage.getItem(user.photoItem);
     if (base64) {
       photoPreviewImg.classList.remove("empty");
       document.documentElement.style.setProperty(
@@ -14,8 +18,47 @@ const Settings = (() => {
       );
     }
 
+    console.log(user.fullname);
     currentName.textContent = user.fullname;
     currentUsername.textContent = user.username;
+  };
+
+  const _ValidatePhoto = (url) => {
+    if (typeof url === "string" && url.startsWith("blob:")) {
+      return true;
+    }
+
+    const isUrlObject = (url) => {
+      try {
+        new URL(url);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    };
+
+    const isAnImage = (urlObj) => {
+      const imageExtensions = [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".webp",
+        ".svg",
+        ".bmp",
+      ];
+      const pathname = urlObj.pathname.toLowerCase();
+      return imageExtensions.some((ext) => pathname.endsWith(ext));
+    };
+
+    if (!isUrlObject(url)) {
+      return false;
+    }
+
+    const urlObj = new URL(url);
+    console.log(urlObj);
+
+    return isAnImage(urlObj) ? true : false;
   };
 
   const _CurrentUploadedPhoto = (() => {
@@ -58,6 +101,12 @@ const Settings = (() => {
         console.error("Invalid image file");
         return false;
       }
+
+      if (file.size > MAX_FILE_SIZE) {
+        console.error(`File too big! Max ${MAX_FILE_SIZE_MB}MB allowed.`);
+        return false;
+      }
+
       photoFile = file;
     };
 
@@ -82,6 +131,13 @@ const Settings = (() => {
     };
   })();
 
+  const storeUserLocally = (user) => {
+    if (!user instanceof User) {
+      return false;
+    }
+    localStorage.setItem("User", JSON.stringify(user.toJSON()));
+  };
+
   const _updateUserInfoFromSettings = (user, formData) => {
     const photoFile = _CurrentUploadedPhoto.getFile();
     const newName = formData.get("new-name");
@@ -93,11 +149,14 @@ const Settings = (() => {
       willWaitForPhoto = true;
 
       const reader = new FileReader();
-      reader.onload = (e) => {
+      const onLoad = (e) => {
         const base64String = e.target.result;
-        localStorage.setItem("userPhoto", base64String);
+        user.photo = base64String;
         LeftSidebar.updateUserPreviewInfo(user); // update info when photo is loaded
+        storeUserLocally(user); //
       };
+
+      reader.onload = (e) => onLoad(e);
       reader.readAsDataURL(photoFile);
     }
 
@@ -111,6 +170,7 @@ const Settings = (() => {
     if (!willWaitForPhoto) {
       // update immediately if no photo change
       LeftSidebar.updateUserPreviewInfo(user);
+      storeUserLocally(user);
     }
   };
 
@@ -123,44 +183,6 @@ const Settings = (() => {
     }
     settingsDialog.close();
     settingsForm.reset();
-  };
-
-  const _ValidatePhoto = (url) => {
-    if (typeof url === "string" && url.startsWith("blob:")) {
-      return true;
-    }
-
-    const isUrlObject = (url) => {
-      try {
-        new URL(url);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    };
-
-    const isAnImage = (urlObj) => {
-      const imageExtensions = [
-        ".jpg",
-        ".jpeg",
-        ".png",
-        ".gif",
-        ".webp",
-        ".svg",
-        ".bmp",
-      ];
-      const pathname = urlObj.pathname.toLowerCase();
-      return imageExtensions.some((ext) => pathname.endsWith(ext));
-    };
-
-    if (!isUrlObject(url)) {
-      return false;
-    }
-
-    const urlObj = new URL(url);
-    console.log(urlObj);
-
-    return isAnImage(urlObj) ? true : false;
   };
 
   const _showTemporarilyPhotoPreview = () => {
@@ -176,21 +198,21 @@ const Settings = (() => {
     );
   };
 
-  const _settingsWarning = (element=null, msg) => {
-    const parent = document.querySelector('#settings');
+  const _settingsWarning = (element = null, msg) => {
+    const parent = document.querySelector("#settings");
 
-    if (!element || !element.classList.contains('settings-child')){
-      console.error('Error: only #settings childs are valid');
+    if (!element || !element.classList.contains("settings-child")) {
+      console.error("Error: only #settings childs are valid");
       return;
     }
-    const existingWarning = parent.querySelector('.settings-warning');
-    if (existingWarning){
+    const existingWarning = parent.querySelector(".settings-warning");
+    if (existingWarning) {
       existingWarning.remove();
     }
 
-    const warningDiv = document.createElement('div');
-    warningDiv.classList.add('settings-warning')
-    const warningP = document.createElement('p');
+    const warningDiv = document.createElement("div");
+    warningDiv.classList.add("settings-warning");
+    const warningP = document.createElement("p");
     warningP.textContent = String(msg);
     warningDiv.appendChild(warningP);
     element.after(warningDiv);
@@ -201,30 +223,31 @@ const Settings = (() => {
       warningDiv.remove();
       controller.abort();
       return;
-    }
+    };
 
-    const inputChild = element.querySelector('input');
+    const inputChild = element.querySelector("input");
 
-    if (inputChild.id === 'photo-input'){
-      inputChild.addEventListener('click', () => removeWarning(warningDiv), { 
-        signal: controller.signal, 
+    if (inputChild.id === "photo-input") {
+      inputChild.addEventListener("click", () => removeWarning(warningDiv), {
+        signal: controller.signal,
       });
     } else {
-      inputChild.addEventListener('blur', () => removeWarning(warningDiv), { 
-        signal: controller.signal, 
+      inputChild.addEventListener("blur", () => removeWarning(warningDiv), {
+        signal: controller.signal,
       });
-      inputChild.addEventListener('keydown', () => removeWarning(warningDiv), { 
-        signal: controller.signal, 
+      inputChild.addEventListener("keydown", () => removeWarning(warningDiv), {
+        signal: controller.signal,
       });
     }
 
-    parent.closest('#settings-dialog').addEventListener('close', () => removeWarning(warningDiv), { 
-      signal: controller.signal, 
-    });
+    parent
+      .closest("#settings-dialog")
+      .addEventListener("close", () => removeWarning(warningDiv), {
+        signal: controller.signal,
+      });
+  };
 
-  }
-
-  const clickOnUploadPhoto = (user) => {
+  const clickOnUploadPhoto = () => {
     const uploadPhotoDiv = document.querySelector(".settings-photo-preview");
     const input = document.querySelector("#photo-input");
 
@@ -233,10 +256,21 @@ const Settings = (() => {
       if (!file) {
         return;
       }
-      if (!file.type.startsWith("image/")){
-        _settingsWarning(uploadPhotoDiv.closest('.settings-child'), 'Please upload an image file');
+      if (!file.type.startsWith("image/")) {
+        _settingsWarning(
+          uploadPhotoDiv.closest(".settings-child"),
+          "Please upload an image file"
+        );
         return;
       }
+      if (file.size > MAX_FILE_SIZE) {
+        _settingsWarning(
+          uploadPhotoDiv.closest(".settings-child"),
+          `File too big! Max ${MAX_FILE_SIZE_MB}MB allowed.`
+        );
+        return;
+      }
+
       const photoUrl = URL.createObjectURL(file);
       if (_CurrentUploadedPhoto.setUrl(photoUrl) === false) {
         URL.revokeObjectURL(photoUrl);
@@ -250,10 +284,78 @@ const Settings = (() => {
     input.click();
   };
 
+  const _resetSettingsView = (
+    controller,
+    input,
+    elemToShow,
+    deleteInputValues = false,
+    key = null
+  ) => {
+    if (key && key.code !== "Enter") {
+      return;
+    }
+
+    if (key) {
+      key.preventDefault();
+    }
+    if (input.value && input.value.length > 0) {
+      elemToShow.textContent = input.value;
+    }
+    input.classList.add("hidden");
+    elemToShow.classList.remove("hidden");
+
+    if (deleteInputValues) {
+      input.value = "";
+    }
+    controller.abort();
+  };
+
+  const _toggleSettingsInput = (elem, input) => {
+    if (input.classList.contains("hidden")) {
+      elem.classList.add("hidden");
+      input.value = elem.textContent;
+      input.classList.remove("hidden");
+      input.focus();
+
+      const controller = new AbortController();
+      input.addEventListener(
+        "blur",
+        () => _resetSettingsView(controller, input, elem),
+        {
+          signal: controller.signal,
+        }
+      );
+      input.addEventListener(
+        "keydown",
+        (key) => _resetSettingsView(controller, input, elem, false, key),
+        {
+          signal: controller.signal,
+        }
+      );
+    }
+  };
+
+  const clickOnNewName = () => {
+    const nameH2 = document.querySelector(".current-name");
+    const newNameInput = document.querySelector("#new-name");
+
+    _toggleSettingsInput(nameH2, newNameInput);
+  };
+
+  const clickOnNewUsername = (user) => {
+    const usernameP = document.querySelector(".current-username");
+    const usernameInput = document.querySelector("#new-username");
+
+    _toggleSettingsInput(usernameP, usernameInput);
+  };
+
   return {
     clickOnExitSettings,
     clickOnUploadPhoto,
     loadUserInfoInSettings,
+    clickOnNewName,
+    storeUserLocally,
+    clickOnNewUsername,
   };
 })();
 

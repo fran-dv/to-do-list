@@ -53,6 +53,10 @@
   font-weight: bolder;
   grid-column: 2;
   align-self: end;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  white-space: nowrap;
 }
 
 .username {
