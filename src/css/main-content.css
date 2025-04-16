@@ -1,3 +1,4 @@
+#finished-tasks,
 #inbox {
     display: flex;
     flex-direction: column;
@@ -13,14 +14,20 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 2rem;
+    min-width: 23rem;
 }
 
+#finished-tasks h1,
+#finished-tasks h2,
+#finished-tasks h3,
+#finished-tasks p,
 #inbox h1,
 #inbox h2,
 #inbox h3,
 #inbox p {
     font-family: "Gowun Dodum", sans-serif;
     line-height: 1.2;
+    color: var(--dark-color);
 }
 
 .welcome.title {

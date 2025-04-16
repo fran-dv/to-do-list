@@ -1,62 +1,71 @@
 :root {
-    --prior-1-clr: #087E8B;
-    --prior-2-clr: #FF9F1C;
-    --prior-3-clr: #650D1B;
+  --prior-1-clr: #087e8b;
+  --prior-2-clr: #ff9f1c;
+  --prior-3-clr: #650d1b;
 }
 
 .task {
-    width: 100%;
-    padding: 1rem;
-    border-radius: 1rem;
-    background-color: var(--primary-color);
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 1rem;
-    cursor: pointer;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
 }
 
 .task[data-priority="1"],
-.task[data-priority="1"] .task-check{
-    /* text-decoration: underline 3px #00F2F2; */
-    border: 2px solid var(--prior-1-clr);
+.task[data-priority="1"] .task-check {
+  /* text-decoration: underline 3px #00F2F2; */
+  border: 2px solid var(--prior-1-clr);
 }
 
 .task[data-priority="2"],
 .task[data-priority="2"] .task-check {
-    /* text-decoration: underline 3px #FFA630; */
-    border: 2px solid var(--prior-2-clr);
+  /* text-decoration: underline 3px #FFA630; */
+  border: 2px solid var(--prior-2-clr);
 }
 
 .task[data-priority="3"],
-.task[data-priority="3"] .task-check{
-    border: 2px solid var(--prior-3-clr);
+.task[data-priority="3"] .task-check {
+  border: 2px solid var(--prior-3-clr);
 }
 
 .task-check {
-    aspect-ratio: 1;
-    width: 1.3rem;
-    height: auto;
-    border-radius: 0.25rem;
-    background-color: var(--hover-color);
+  aspect-ratio: 1;
+  width: 1.3rem;
+  height: auto;
+  border-radius: 0.25rem;
+  background-color: var(--hover-color);
 }
 
-.task[data-priority="0"] .task-check:hover{
-    background-color: var(--secondary-color);
+.task[data-priority="0"] .task-check:hover,
+.task[data-priority="0"][data-completed="1"] .task-check {
+  background-color: var(--secondary-color);
 }
 
-.task[data-priority="1"] .task-check:hover{
-    background-color: var(--prior-1-clr);
+.task[data-priority="1"] .task-check:hover,
+.task[data-priority="1"][data-completed="1"] .task-check {
+  background-color: var(--prior-1-clr);
 }
 
-.task[data-priority="2"] .task-check:hover{
-    background-color: var(--prior-2-clr);
+.task[data-priority="2"] .task-check:hover,
+.task[data-priority="2"][data-completed="1"] .task-check {
+  background-color: var(--prior-2-clr);
 }
 
-.task[data-priority="3"] .task-check:hover{
-    background-color: var(--prior-3-clr);
+.task[data-priority="3"] .task-check:hover,
+.task[data-priority="3"][data-completed="1"] .task-check {
+  background-color: var(--prior-3-clr);
+}
+
+.task[data-completed="1"] h2 {
+  text-decoration: line-through 2px;
+  font-style: italic;
 }
 
 .due-date {
-    margin-left: auto;
+  margin-left: auto;
 }

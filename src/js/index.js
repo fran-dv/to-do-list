@@ -6,7 +6,6 @@ import { LeftSidebar } from "./dom-left-sidebar.js";
 import { User } from "./user.js";
 import { Settings } from "./dom-settings.js";
 
-
 const CurrentUser = User.getExistingOrCreateNew("Name");
 LeftSidebar.updateUserProjects(CurrentUser);
 LeftSidebar.updateUserPreviewInfo(CurrentUser);
@@ -53,7 +52,16 @@ const handlePageClicks = (e) => {
       Settings.clickOnExitSettings(CurrentUser, saveSettings);
       Content.updateContent(CurrentUser);
       break;
-    
+    case "edit-task":
+      Content.editTaskPopUp(target.dataset.index);
+      break;
+    case "finished-tasks":
+      Content.loadMainContent(CurrentUser, "finished");
+      break;
+    case "complete-task":
+      const parentTaskDiv = target.closest(".task");
+      Content.clickOnCheckTask(CurrentUser, parentTaskDiv);
+      break;
   }
 };
 
