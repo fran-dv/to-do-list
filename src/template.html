@@ -75,47 +75,48 @@
 
       <div id="dynamic-content"></div>
 
-      <dialog id="settings-dialog">
-        <div id="exit-settings" data-click="exit-settings">
-          <img src="/src/assets/image/plus.svg" alt="Exit settings" />
-        </div>
-        <form action="" name="settings" id="settings">
-          <div class="settings-child photo">
-            <div class="settings-photo-preview empty" data-click="upload-photo">
-              <input
-                class="hidden"
-                type="file"
-                name="photo"
-                accept="image/*"
-                id="photo-input"
-              />
-            </div>
-          </div>
-          <div class="settings-child" data-click="new-name">
-            <h2 class="current-name"></h2>
-            <input
-              class="hidden"
-              type="text"
-              name="new-name"
-              id="new-name"
-              maxlength="25"
-            />
-          </div>
-          <div class="settings-child" data-click="new-username">
-            <p class="current-username"></p>
-            <input
-              class="hidden"
-              type="text"
-              name="new-username"
-              id="new-username"
-            />
-          </div>
-          <div id="save-changes" data-click="save-settings">
-            <button type="submit"><p>Save changes</p></button>
-          </div>
-        </form>
-      </dialog>
     </main>
+
+    <dialog id="settings-dialog">
+      <div id="exit-settings" data-click="exit-settings">
+        <img src="/src/assets/image/plus.svg" alt="Exit settings" />
+      </div>
+      <form action="" name="settings" id="settings">
+        <div class="settings-child photo">
+          <div class="settings-photo-preview empty" data-click="upload-photo">
+            <input
+              class="hidden"
+              type="file"
+              name="photo"
+              accept="image/*"
+              id="photo-input"
+            />
+          </div>
+        </div>
+        <div class="settings-child" data-click="new-name">
+          <h2 class="current-name"></h2>
+          <input
+            class="hidden"
+            type="text"
+            name="new-name"
+            id="new-name"
+            maxlength="25"
+          />
+        </div>
+        <div class="settings-child" data-click="new-username">
+          <p class="current-username"></p>
+          <input
+            class="hidden"
+            type="text"
+            name="new-username"
+            id="new-username"
+          />
+        </div>
+        <div id="save-changes" data-click="save-settings">
+          <button type="submit"><p>Save changes</p></button>
+        </div>
+      </form>
+    </dialog>
     
   </body>
 </html>
