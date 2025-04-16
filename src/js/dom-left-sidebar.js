@@ -5,11 +5,42 @@ import "/src/css/user-settings.css";
 const LeftSidebar = (() => {
   const sidebarDiv = document.querySelector("#left-sidebar");
 
+  const _areProjectsCollapsed = () => {
+    const collapseBtn = document.querySelector(".projects-collapse");
+    if (collapseBtn.classList.contains("collapsed")){
+      return true;
+    }
+    return false;
+  }
+
+  const toggleProjectsVisibility = () => {
+    const collapseBtn = document.querySelector(".projects-collapse");
+    if (collapseBtn.classList.contains("collapsed")) {
+      collapseBtn.classList.remove("collapsed");
+    } else {
+      const existingWarning = document.querySelector(".project-warning");
+      collapseBtn.classList.add("collapsed");
+      if (existingWarning) {
+        existingWarning.remove();
+      }
+      setTimeout(() => _resetAddProjectsBtn(), 300); // wait for the fade-out animation
+    }
+  };
+
   const toggleVisibility = () => {
     if (sidebarDiv.classList.contains("collapsed")) {
-      sidebarDiv.classList.remove("collapsed");
+      sidebarDiv.classList.remove("hidden");
+      setTimeout(() => {
+        sidebarDiv.classList.remove("collapsed");
+      }, 100)
     } else {
       sidebarDiv.classList.add("collapsed");
+      setTimeout(() => {
+        sidebarDiv.classList.add('hidden');
+      }, 300)
+      if (!_areProjectsCollapsed()){
+        toggleProjectsVisibility();
+      }
     }
   };
 
@@ -48,20 +79,7 @@ const LeftSidebar = (() => {
     input.classList.add("hidden");
   };
 
-  const toggleProjectsVisibility = () => {
-    const collapseBtn = document.querySelector(".projects-collapse");
-    const addProjectInput = document.querySelector(".add.project > input");
-    if (collapseBtn.classList.contains("collapsed")) {
-      collapseBtn.classList.remove("collapsed");
-    } else {
-      const existingWarning = document.querySelector(".project-warning");
-      collapseBtn.classList.add("collapsed");
-      if (existingWarning) {
-        existingWarning.remove();
-      }
-      setTimeout(() => _resetAddProjectsBtn(), 300); // wait for the fade-out animation
-    }
-  };
+  
 
   const _projectTitleWarning = (msg = "error", input) => {
     const projectsList = document.querySelector(".user-projects");
@@ -168,13 +186,12 @@ const LeftSidebar = (() => {
     const username = document.querySelector(".username");
 
     if (user.photo) {
-      console.log("photo: ", user.photo);
       photoParent.classList.remove("empty");
       photo.src = user.photo;
     }
 
     name.textContent = user.fullname
-      ? user.fullname.split(" ")[0]
+      ? user.firstname
       : "Your name";
     username.textContent = user.username;
   };

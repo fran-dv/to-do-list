@@ -8,10 +8,9 @@ import { Settings } from "./dom-settings.js";
 
 
 const CurrentUser = User.getExistingOrCreateNew("Name");
-console.log(CurrentUser.photo);
 LeftSidebar.updateUserProjects(CurrentUser);
 LeftSidebar.updateUserPreviewInfo(CurrentUser);
-const Content = new MainContent();
+const Content = new MainContent(CurrentUser);
 
 const handlePageClicks = (e) => {
   const target = e.target.closest("[data-click]");
@@ -22,7 +21,7 @@ const handlePageClicks = (e) => {
 
   switch (target.dataset.click) {
     case "inbox":
-      Content.loadMainContent("inbox");
+      Content.loadMainContent(CurrentUser, "inbox");
       break;
     case "collapse-projects":
       LeftSidebar.toggleProjectsVisibility();
@@ -52,7 +51,9 @@ const handlePageClicks = (e) => {
       e.preventDefault();
       const saveSettings = true;
       Settings.clickOnExitSettings(CurrentUser, saveSettings);
+      Content.updateContent(CurrentUser);
       break;
+    
   }
 };
 

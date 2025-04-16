@@ -1,4 +1,5 @@
 import { Project } from "./project";
+import { insertSortedTasksByDate } from "./sorting";
 import { Task } from "./task";
 
 class User {
@@ -7,16 +8,32 @@ class User {
   #username;
   #projects = [];
   #photoItem = "userPhoto";
+  #tasks = [];
 
   constructor(name) {
     this.#fullname = name;
     this.#username = null;
-    this.#projects = [new Project("My Tasks")];
+    this.#projects.push(new Project("My Tasks"));
     this.#photoUrl = null;
+    this.#tasks.push(new Task("Welcome to the app!"));
+
+    // remove this:
+    const debugTask1 = new Task("Task with closer date");
+    debugTask1.dueDate = '10-01-2025';
+    debugTask1.priority = 1;
+    const debugTask2 = new Task("Task with date");
+    debugTask2.dueDate = '01-01-2026';
+    debugTask2.priority = 3;
+    this.addTask(debugTask1);
+    this.addTask(debugTask2);
   }
 
   get fullname() {
     return this.#fullname;
+  }
+
+  get firstname() {
+    return this.fullname.split(" ")[0];
   }
 
   get username() {
@@ -27,12 +44,12 @@ class User {
     return this.#photoUrl;
   }
 
-  get projects() {
-    return this.#projects;
+  get tasks() {
+    return this.#tasks;
   }
 
-  get photoItem() {
-    return this.#photoItem;
+  get projects() {
+    return this.#projects;
   }
 
   set fullname(name) {
@@ -47,8 +64,8 @@ class User {
 
   set photo(url) {
     this.#photoUrl = url;
-    localStorage.setItem(this.#photoItem, this.#photoUrl);
   }
+
 
   set projects(projectsArray) {
     if (!this.#isProjectsArray(projectsArray)) {
@@ -72,6 +89,27 @@ class User {
     let isValid = this.isValidName(title);
 
     return isValid ? title : false;
+  }
+
+  #isTaskValid(task){
+    if (!(task instanceof Task)) {
+      return false;
+    }
+    return true;if (!this.#isTaskValid(task)){
+      console.error('Invalid task: It must be an instance of `Task`');
+    }
+  }
+
+  addTask(task, projectIndex=0){
+    if (!this.#isTaskValid(task)){
+      console.error('Invalid task: It must be an instance of `Task`');
+    }
+    if (projectIndex < 0 || projectIndex >= this.projects.length) {
+      console.error(`projectIndex \`${projectIndex}\` is out of range.`);
+      return false;
+    }
+    this.projects[projectIndex].appendTask(task);
+    insertSortedTasksByDate(this.#tasks, task);
   }
 
   addProject(title) {

@@ -9,7 +9,7 @@ const Settings = (() => {
     const photoPreviewImg = document.querySelector(".settings-photo-preview");
     const currentName = document.querySelector(".current-name");
     const currentUsername = document.querySelector(".current-username");
-    const base64 = localStorage.getItem(user.photoItem);
+    const base64 = user.photo;
     if (base64) {
       photoPreviewImg.classList.remove("empty");
       document.documentElement.style.setProperty(
@@ -18,7 +18,6 @@ const Settings = (() => {
       );
     }
 
-    console.log(user.fullname);
     currentName.textContent = user.fullname;
     currentUsername.textContent = user.username;
   };

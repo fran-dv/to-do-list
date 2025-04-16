@@ -1,0 +1,110 @@
+#inbox {
+    display: flex;
+    flex-direction: column;
+    transition: transform 1s ease-in-out;
+    padding: 2rem 5rem;
+    width: 70%;
+    height: 100%;
+    max-height: 100%;
+    gap: 1rem;
+}
+
+#welcome-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+#inbox h1,
+#inbox h2,
+#inbox h3,
+#inbox p {
+    font-family: "Gowun Dodum", sans-serif;
+    line-height: 1.2;
+}
+
+.welcome.title {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.welcome.subtitle {
+    font-size: 2rem;
+    font-weight: 300;
+}
+
+.task-list-title {
+    min-width: 23rem;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+
+.task-list-title h2,
+.task-list-title::before {
+    font-size: 2.1rem;
+}
+
+.task-list-title h2 {
+    text-decoration: underline 2px var(--secondary-color);
+}
+
+.task-list-title::before {
+    content: "🎯";
+}
+
+.add-task-button {
+    margin-left: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-task-button img {
+    width: 3rem;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    filter: brightness(0) saturate(100%) invert(45%) sepia(69%) saturate(1651%) hue-rotate(326deg) brightness(93%) contrast(97%);
+}
+
+.add-task-button:hover img {
+    transform: rotate(90deg);
+} 
+
+.no-tasks-msg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    align-self: stretch;
+}
+
+#inbox-tasks {
+    background-color: var(--hover-color);
+    width: 100%;
+    min-width: 25rem;
+    height: 100%;
+    max-height: 40rem;
+    border-radius: 2rem;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+    box-shadow: 4px 4px 7px rgb(0,0,0,0.4);
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
+}
+
+#inbox-tasks::-webkit-scrollbar {
+    display: none;
+}
+
+
+
+
+

@@ -3,13 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <!-- fonts  -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=DM+Serif+Display:ital@0;1&display=swap"
       rel="stylesheet"
     />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <!-- fonts -->
     <link rel="icon" type="image/x-icon" href="/src/assets/image/favicon.svg" />
     <title>To do</title>
   </head>
@@ -58,12 +63,13 @@
           </div>
         </div>
 
-        <div id="sidebar-collapse" data-click="collapse-sidebar">
-          <img src="/src/assets/image/arrow-collapse.svg" alt="" />
-        </div>
+        
       </aside>
+      <div id="sidebar-collapse" data-click="collapse-sidebar">
+        <img src="/src/assets/image/arrow-collapse.svg" alt="" />
+      </div>
 
-      <section id="dynamic-content"></section>
+      <div id="dynamic-content"></div>
 
       <dialog id="settings-dialog">
         <div id="exit-settings" data-click="exit-settings">
@@ -106,5 +112,6 @@
         </form>
       </dialog>
     </main>
+    
   </body>
 </html>

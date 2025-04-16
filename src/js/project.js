@@ -17,12 +17,23 @@ class Project {
     this.#title = title;
   }
 
+  // create a new task
   addTask(title) {
     this.#tasks.push(new Task(title));
+    this.tasks[this.tasks.length - 1].parentProject = this;
+  }
+  // append existing task
+  appendTask(task) {
+    if (!(task instanceof Task)){
+      return false;
+    }
+    this.#tasks.push(task);
+    task.parentProject = this;
   }
 
   removeTask(taskIndex) {
     if (taskIndex >= 0 && taskIndex < this.#tasks.length) {
+      this.tasks[taskIndex].parentProject = null;
       this.#tasks.splice(taskIndex, 1);
     }
   }

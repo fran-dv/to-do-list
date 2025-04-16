@@ -1,3 +1,4 @@
+import { Project } from "./project";
 import { SubTask } from "./subtask";
 
 class Task {
@@ -8,6 +9,7 @@ class Task {
   #dueDate;
   #priority;
   #tags;
+  #parentProject;
 
   constructor(title) {
     this.#title = title;
@@ -22,26 +24,64 @@ class Task {
   get title() {
     return this.#title;
   }
+  get description() {
+    return this.#description;
+  }
+  get status() {
+    return this.#completed;
+  }
+  get subtasks() {
+    return this.#subtasks;
+  }
+  get dueDate() {
+    return this.#dueDate;
+  }
+  get priority() {
+    return this.#priority;
+  }
+  get tags() {
+    return this.#tags;
+  }
+  get parentProject(){
+    return this.#parentProject;
+  }
+  
 
   set title(title) {
     this.#title = title;
   }
-
-  get description() {
-    return this.#description;
-  }
-
   set description(description) {
     this.#description = description;
   }
-
-  get status() {
-    return this.#completed;
-  }
-
   set status(boolean) {
     if (typeof boolean === "boolean") {
       this.#completed = boolean;
+    }
+  }
+  set subtasks(subtasksArray) {
+    if (!this.#isSubtasksArray(subtasksArray)) {
+      return false;
+    }
+    this.#subtasks = this.#subtasks;
+  }
+
+  #isDateValid(dateString) {
+    return !isNaN(new Date(dateString));
+  };
+
+  set dueDate(dateString) {
+    if (!this.#isDateValid(dateString)) {
+      console.error('invalid date string');
+      return;
+    }
+    this.#dueDate = new Date(dateString);
+  }
+  set priority(number) {
+    // Priority values: 0 (neutral), 1 (low), 2 (medium) and 3 (high).
+    const isValidNumber =
+      typeof number === "number" && number >= 0 && number <= 3;
+    if (isValidNumber) {
+      this.#priority = number;
     }
   }
 
@@ -66,44 +106,6 @@ class Task {
     });
 
     return true;
-  }
-
-  set subtasks(subtasksArray) {
-    if (!this.#isSubtasksArray(subtasksArray)) {
-      return false;
-    }
-
-    this.#subtasks = this.#subtasks;
-  }
-
-  get subtasks() {
-    return this.#subtasks;
-  }
-
-  get dueDate() {
-    return this.#dueDate;
-  }
-
-  set dueDate(dateString) {
-    const isDateValid = (dateString) => {
-      return !isNaN(new Date(dateString));
-    };
-    if (isDateValid(dateString)) {
-      this.#dueDate = Date(dateString);
-    }
-  }
-
-  set priority(number) {
-    // Priority values: 0 (neutral), 1 (low), 2 (medium) and 3 (high).
-    const isValidNumber =
-      typeof number === "number" && number >= 0 && number <= 3;
-    if (isValidNumber) {
-      this.#priority = number;
-    }
-  }
-
-  get priority() {
-    return this.#priority;
   }
 
   addTag(tagName) {
@@ -139,8 +141,11 @@ class Task {
     this.#tags = tagsArray;
   }
 
-  get tags() {
-    return this.#tags;
+  set parentProject(project){
+    if (!(project instanceof Project)){
+      this.#parentProject = null;
+    }
+    this.#parentProject = project;
   }
 
   toJSON() {
