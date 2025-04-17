@@ -2,6 +2,13 @@
   --prior-1-clr: #087e8b;
   --prior-2-clr: #ff9f1c;
   --prior-3-clr: #650d1b;
+
+  --prior-1-filter: brightness(0) saturate(100%) invert(34%) sepia(94%)
+    saturate(427%) hue-rotate(137deg) brightness(96%) contrast(97%);
+  --prior-2-filter: brightness(0) saturate(100%) invert(80%) sepia(24%)
+    saturate(6301%) hue-rotate(343deg) brightness(100%) contrast(102%);
+  --prior-3-filter: brightness(0) saturate(100%) invert(14%) sepia(52%)
+    saturate(1856%) hue-rotate(321deg) brightness(95%) contrast(109%);
 }
 
 .task {
@@ -18,13 +25,11 @@
 
 .task[data-priority="1"],
 .task[data-priority="1"] .task-check {
-  /* text-decoration: underline 3px #00F2F2; */
   border: 2px solid var(--prior-1-clr);
 }
 
 .task[data-priority="2"],
 .task[data-priority="2"] .task-check {
-  /* text-decoration: underline 3px #FFA630; */
   border: 2px solid var(--prior-2-clr);
 }
 
@@ -68,4 +73,30 @@
 
 .due-date {
   margin-left: auto;
+}
+
+.sub.task {
+  width: 100%;
+  display: flex;
+  cursor: default;
+}
+
+.sub.task .delete {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.sub.task .task-check {
+  width: 1.5rem;
+  border-radius: 100%;
+}
+
+.sub.task > .task-title {
+  font-family: var(--main-content-font);
+  font-size: 1.5rem;
+}
+
+.sub.task .delete > img {
+  width: 2rem;
+  filter: var(--prior-3-filter);
 }

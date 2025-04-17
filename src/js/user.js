@@ -16,6 +16,8 @@ class User {
     this.#projects.push(new Project("My Tasks"));
     this.#photoUrl = null;
     this.#tasks.push(new Task("Welcome to the app!"));
+
+    
   }
 
   get fullname() {

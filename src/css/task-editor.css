@@ -1,0 +1,213 @@
+dialog img {
+  filter: brightness(0) saturate(100%) invert(6%) sepia(24%) saturate(173%)
+    hue-rotate(59deg) brightness(100%) contrast(96%);
+}
+
+img[data-priority="1"] {
+  filter: brightness(0) saturate(100%) invert(34%) sepia(94%) saturate(427%)
+    hue-rotate(137deg) brightness(96%) contrast(97%);
+}
+img[data-priority="2"] {
+  filter: var(--prior-2-filter);
+}
+img[data-priority="3"] {
+  filter: var(--prior-3-filter);
+}
+
+#task-editor-dialog {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: auto;
+  margin-left: auto;
+  width: 50rem;
+  min-width: 30rem;
+  height: 70%;
+  border: none;
+  outline: none;
+  padding: 2rem 3rem 0 3rem;
+  border-radius: 2rem;
+  background-color: var(--primary-color);
+}
+
+/* Hide scrollbar */
+#task-editor-dialog {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#task-editor-dialog::-webkit-scrollbar {
+  display: none;
+}
+
+#task-editor {
+  width: 100%;
+  height: 100%;
+}
+
+#task-editor h1,
+#task-editor h2,
+#task-editor p {
+  font-family: var(--main-content-font);
+  color: var(--dark-color);
+}
+
+#edit-task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  height: 100%;
+}
+
+.editor-header .task-check {
+  width: 1.7rem;
+  background-color: var(--hover-color);
+}
+
+#edit-task-form .task-check:hover {
+  background-color: var(--secondary-color);
+  cursor: pointer;
+}
+
+.editor-header {
+  padding: 0.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 2px solid var(--tertiary-color);
+}
+
+.check {
+  padding-right: 0.75rem;
+  border-right: 2px solid var(--tertiary-color);
+}
+
+.date {
+  display: flex;
+}
+
+.task-date {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  border-radius: 0.5rem;
+}
+
+.task-date:hover {
+  background-color: var(--tertiary-color-transparent);
+}
+
+.date img {
+  width: 2.5rem;
+}
+
+.priority {
+  margin-left: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.priority p {
+  align-self: center;
+}
+
+.priority-option {
+  border-radius: 0.5rem;
+}
+
+.priority-option img {
+  width: 2.3rem;
+  cursor: pointer;
+}
+
+.priority-option:hover {
+  background-color: var(--tertiary-color-transparent);
+}
+
+#task-title,
+#task-description,
+.subtasks,
+.buttons {
+  padding: 1rem 0.5rem;
+}
+
+#new-subtask,
+#task-title {
+  width: 100%;
+  font-size: 2rem;
+  outline: none;
+  background-color: inherit;
+  border-bottom: none;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+}
+
+#task-description::placeholder,
+#task-title::placeholder {
+  color: var(--tertiary-color);
+}
+
+#task-description {
+  width: 100%;
+  resize: none;
+  font-family: var(--main-content-font);
+  font-size: 1.3rem;
+  background-color: inherit;
+  outline: none;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 2px solid var(--tertiary-color);
+}
+
+.subtasks {
+  flex: 1;
+  overflow: auto;
+}
+
+#new-subtask {
+  font-size: 1.5rem;
+  border: 1px solid var(--hover-color);
+  border-radius: 1rem;
+  padding: 0.7rem 0.5rem;
+}
+
+#new-subtask::placeholder {
+  color: var(--tertiary-color);
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  gap: 0.5rem;
+  position: sticky;
+  bottom: 0;
+  background-color: var(--primary-color);
+  margin-top: auto;
+  z-index: 1;
+}
+
+.buttons > button {
+  width: 20rem;
+  padding: 0.5rem 3rem;
+  border-radius: 1rem;
+  border: none;
+  cursor: pointer;
+}
+
+#task-editor .buttons > .submit-button > p {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bolder;
+}
+
+button[data-click="save-task"] {
+  background-color: var(--accent-color);
+}
+
+button[data-click="delete-task"] {
+  background-color: var(--secondary-color);
+}

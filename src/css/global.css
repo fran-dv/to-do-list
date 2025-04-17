@@ -9,12 +9,14 @@
   --secondary-color: #ea5455;
   --tertiary-color: #e4dccf;
   --primary-color-transparent: rgb(249, 245, 235, 0.5);
+  --tertiary-color-transparent: rgb(228, 220, 207, 0.5);
   --accent-color: #002b5b;
   --hover-color: rgb(231, 152, 146, 0.5);
   --dark-color: #141414;
 
   --general-font: "Cormorant Garamond", sans-serif, serif;
   --heading-font: "DM Serif Display", serif;
+  --main-content-font: "Gowun Dodum", sans-serif;
 
   --left-sidebar-width: 23rem;
   --empty-photo-url: url("/src/assets/image/camera.svg");

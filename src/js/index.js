@@ -5,6 +5,7 @@ import { MainContent } from "./dom-main-content.js";
 import { LeftSidebar } from "./dom-left-sidebar.js";
 import { User } from "./user.js";
 import { Settings } from "./dom-settings.js";
+import { TaskEditor } from "./dom-task-editor.js";
 
 const CurrentUser = User.getExistingOrCreateNew("Name");
 LeftSidebar.updateUserProjects(CurrentUser);
@@ -52,8 +53,11 @@ const handlePageClicks = (e) => {
       Settings.clickOnExitSettings(CurrentUser, saveSettings);
       Content.updateContent(CurrentUser);
       break;
+    case "new-task":
+      TaskEditor.popUp();
+      break;
     case "edit-task":
-      Content.editTaskPopUp(target.dataset.index);
+      TaskEditor.popUp();
       break;
     case "finished-tasks":
       Content.loadMainContent(CurrentUser, "finished");
@@ -61,6 +65,8 @@ const handlePageClicks = (e) => {
     case "complete-task":
       const parentTaskDiv = target.closest(".task");
       Content.clickOnCheckTask(CurrentUser, parentTaskDiv);
+      break;
+    case "choose-priority":
       break;
   }
 };

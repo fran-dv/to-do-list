@@ -72,8 +72,12 @@ export class MainContent {
     return container;
   }
 
-  #generateEmptyInboxDiv() {
-    const emptyMsg = "Your task list is spotless. Great job!";
+  #generateEmptyInboxDiv(finishedTasks=false) {
+    let msg = "Your task list is spotless. Great job!"
+    if (finishedTasks){
+      msg = "Nothing here."
+    }
+    const emptyMsg = msg;
 
     const container = document.createElement("div");
     const emptyMsgDiv = document.createElement("div");
@@ -132,7 +136,7 @@ export class MainContent {
     const tasksByDate = user.tasks;
 
     if (!tasksByDate || tasksByDate.length === 0) {
-      const emptyInboxDiv = this.#generateEmptyInboxDiv();
+      const emptyInboxDiv = this.#generateEmptyInboxDiv(completed);
       container.appendChild(emptyInboxDiv);
       container.classList.add("no-tasks");
       return container;
@@ -152,7 +156,7 @@ export class MainContent {
     }
 
     if (noTasksDisplayed) {
-      const emptyInboxDiv = this.#generateEmptyInboxDiv();
+      const emptyInboxDiv = this.#generateEmptyInboxDiv(completed);
       container.appendChild(emptyInboxDiv);
       container.classList.add("no-tasks");
       return container;
@@ -172,6 +176,7 @@ export class MainContent {
     if (addTaskButton) {
       const addTaskDiv = document.createElement("div");
       addTaskDiv.classList.add("add-task-button");
+      addTaskDiv.setAttribute('data-click', 'new-task')
       const addTaskImg = document.createElement("img");
       addTaskImg.src = addTaskImage;
       addTaskDiv.appendChild(addTaskImg);

@@ -25,7 +25,7 @@
 #inbox h2,
 #inbox h3,
 #inbox p {
-    font-family: "Gowun Dodum", sans-serif;
+    font-family: var(--main-content-font);
     line-height: 1.2;
     color: var(--dark-color);
 }

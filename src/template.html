@@ -11,9 +11,12 @@
       rel="stylesheet"
     />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap"
+      rel="stylesheet"
+    />
     <!-- fonts -->
     <link rel="icon" type="image/x-icon" href="/src/assets/image/favicon.svg" />
     <title>To do</title>
@@ -66,15 +69,12 @@
             </div>
           </div>
         </div>
-
-        
       </aside>
       <div id="sidebar-collapse" data-click="collapse-sidebar">
         <img src="/src/assets/image/arrow-collapse.svg" alt="" />
       </div>
 
       <div id="dynamic-content"></div>
-
     </main>
 
     <dialog id="settings-dialog">
@@ -117,6 +117,148 @@
         </div>
       </form>
     </dialog>
-    
+
+    <dialog id="task-editor-dialog">
+      <div id="task-editor">
+        <form action="#" id="edit-task-form">
+          <div class="editor-header">
+            <div class="check">
+              <input id="" type="radio" class="hidden" name="task-check" />
+              <div class="task-check"></div>
+            </div>
+
+            <div class="date">
+              <input id="" class="hidden" type="date" name="task-date" />
+              <div class="task-date">
+                <img src="/src/assets/image/calendar.svg" alt="Calendar" />
+                <p id="current-task-date">Due date</p>
+              </div>
+            </div>
+
+            <div class="priority">
+              <p>Priority</p>
+              <div class="priority-option" data-priority="0">
+                <input
+                  class="hidden"
+                  type="radio"
+                  name="priority"
+                  id="prior-0"
+                  value="0"
+                />
+                <img
+                  src="/src/assets/image/flag.svg"
+                  data-priority="0"
+                  alt="priority 0 flag"
+                />
+              </div>
+              <div class="priority-option" data-priority="1">
+                <input
+                  class="hidden"
+                  type="radio"
+                  name="priority"
+                  id="prior-1"
+                  value="1"
+                />
+                <img
+                  src="/src/assets/image/flag.svg"
+                  data-priority="1"
+                  alt="priority 1 flag"
+                />
+              </div>
+              <div class="priority-option" data-priority="2">
+                <input
+                  class="hidden"
+                  type="radio"
+                  name="priority"
+                  id="prior-2"
+                  value="2"
+                />
+                <img
+                  src="/src/assets/image/flag.svg"
+                  data-priority="2"
+                  alt="priority 2 flag"
+                />
+              </div>
+              <div class="priority-option" data-priority="3">
+                <input
+                  class="hidden"
+                  type="radio"
+                  name="priority"
+                  id="prior-3"
+                  value="3"
+                />
+                <img
+                  src="/src/assets/image/flag.svg"
+                  data-priority="3"
+                  alt="priority 3 flag"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <input
+              type="text"
+              name="task-title"
+              id="task-title"
+              placeholder="Enter task title"
+            />
+          </div>
+
+          <div>
+            <textarea
+              name="task-description"
+              id="task-description"
+              placeholder="Task notes"
+              rows="5"
+              spellcheck="false"
+            ></textarea>
+          </div>
+
+          <div class="subtasks">
+            <input
+              type="text"
+              id="new-subtask"
+              placeholder="Enter new subtask"
+            />
+
+            <div class="sub task">
+              <div class="task-check"></div>
+              <div class="task-title">Subtask one</div>
+              <div class="delete">
+                <img src="/src/assets/image/delete.svg" alt="Delete subtask" />
+              </div>
+            </div>
+
+            <div class="sub task">
+              <div class="task-check"></div>
+              <div class="task-title">Subtask two</div>
+              <div class="delete">
+                <img src="/src/assets/image/delete.svg" alt="Delete subtask" />
+              </div>
+            </div>
+          </div>
+
+          <div class="buttons">
+            <button
+              type="submit"
+              class="submit-button"
+              data-click="delete-task"
+              form="edit-task"
+            >
+              <p>Delete</p>
+            </button>
+            <button
+              type="submit"
+              class="submit-button"
+              data-click="save-task"
+              form="edit-task"
+            >
+              <p>Save</p>
+            </button>
+          </div>
+        </form>
+      </div>
+    </dialog>
   </body>
 </html>
