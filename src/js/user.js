@@ -7,7 +7,6 @@ class User {
   #fullname;
   #username;
   #projects = [];
-  #photoItem = "userPhoto";
   #tasks = [];
 
   constructor(name) {

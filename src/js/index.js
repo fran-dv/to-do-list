@@ -66,7 +66,17 @@ const handlePageClicks = (e) => {
       const parentTaskDiv = target.closest(".task");
       Content.clickOnCheckTask(CurrentUser, parentTaskDiv);
       break;
-    case "choose-priority":
+    case "close-editor":
+      TaskEditor.clickOnClose(CurrentUser);
+      break;
+    case "complete-task-editor":
+      const parentForm = target.closest("form");
+      TaskEditor.clickOnCheckTask(target, parentForm);
+    case "date-picker":
+      TaskEditor.clickOnDatePicker(target);
+      break;
+    case "select-priority":
+      TaskEditor.clickOnSelectPriority(target);
       break;
   }
 };

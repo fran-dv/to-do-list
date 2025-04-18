@@ -120,15 +120,26 @@
 
     <dialog id="task-editor-dialog">
       <div id="task-editor">
+        <div class="close-task-editor">
+          <img
+            src="/src/assets/image/plus.svg"
+            alt="Close editor"
+            data-click="close-editor"
+          />
+        </div>
         <form action="#" id="edit-task-form">
           <div class="editor-header">
-            <div class="check">
-              <input id="" type="radio" class="hidden" name="task-check" />
+            <div
+              class="check"
+              data-completed="0"
+              data-click="complete-task-editor"
+            >
+              <input type="checkbox" class="hidden" name="task-check" />
               <div class="task-check"></div>
             </div>
 
-            <div class="date">
-              <input id="" class="hidden" type="date" name="task-date" />
+            <div class="date" data-click="date-picker">
+              <input id="date-input" type="date" name="task-date" />
               <div class="task-date">
                 <img src="/src/assets/image/calendar.svg" alt="Calendar" />
                 <p id="current-task-date">Due date</p>
@@ -137,7 +148,11 @@
 
             <div class="priority">
               <p>Priority</p>
-              <div class="priority-option" data-priority="0">
+              <div
+                class="priority-option"
+                data-click="select-priority"
+                data-priority="0"
+              >
                 <input
                   class="hidden"
                   type="radio"
@@ -151,7 +166,11 @@
                   alt="priority 0 flag"
                 />
               </div>
-              <div class="priority-option" data-priority="1">
+              <div
+                class="priority-option"
+                data-click="select-priority"
+                data-priority="1"
+              >
                 <input
                   class="hidden"
                   type="radio"
@@ -165,7 +184,11 @@
                   alt="priority 1 flag"
                 />
               </div>
-              <div class="priority-option" data-priority="2">
+              <div
+                class="priority-option"
+                data-click="select-priority"
+                data-priority="2"
+              >
                 <input
                   class="hidden"
                   type="radio"
@@ -179,7 +202,11 @@
                   alt="priority 2 flag"
                 />
               </div>
-              <div class="priority-option" data-priority="3">
+              <div
+                class="priority-option"
+                data-click="select-priority"
+                data-priority="3"
+              >
                 <input
                   class="hidden"
                   type="radio"
