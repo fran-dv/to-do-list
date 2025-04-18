@@ -89,7 +89,7 @@ export class MainContent {
     return container;
   }
 
-  #generateTaskDiv(user, task, taskNumber) {
+  #generateTaskDiv(task, taskNumber) {
     const container = document.createElement("div");
     container.classList.add("task");
     container.setAttribute("data-click", "edit-task");
@@ -117,12 +117,7 @@ export class MainContent {
     if (task.dueDate instanceof Date) {
       const dueDate = document.createElement("p");
       dueDate.classList.add("due-date");
-      const currentYear = new Date().getFullYear();
-      if (task.dueDate.getFullYear() > currentYear) {
-        dueDate.textContent = format(task.dueDate, "MMM d yyyy");
-      } else {
-        dueDate.textContent = format(task.dueDate, "MMM d");
-      }
+      dueDate.textContent = DateUtils.getFormattedDate(task.dueDate);
       container.appendChild(dueDate);
     }
 
@@ -149,7 +144,7 @@ export class MainContent {
         : tasksByDate[i].status === false;
 
       if (displayCondition) {
-        const taskDiv = this.#generateTaskDiv(user, tasksByDate[i], i);
+        const taskDiv = this.#generateTaskDiv(tasksByDate[i], i);
         container.appendChild(taskDiv);
         noTasksDisplayed = false;
       }

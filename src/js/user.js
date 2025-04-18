@@ -15,9 +15,7 @@ class User {
     this.#username = null;
     this.#projects.push(new Project("My Tasks"));
     this.#photoUrl = null;
-    this.#tasks.push(new Task("Welcome to the app!"));
-
-    
+    this.addTask(new Task("Welcome to the app!"));
   }
 
   get fullname() {
@@ -87,19 +85,18 @@ class User {
       return false;
     }
     return true;
-    if (!this.#isTaskValid(task)) {
-      console.error("Invalid task: It must be an instance of `Task`");
-    }
   }
 
   addTask(task, projectIndex = 0) {
     if (!this.#isTaskValid(task)) {
       console.error("Invalid task: It must be an instance of `Task`");
+      return;
     }
     if (projectIndex < 0 || projectIndex >= this.projects.length) {
       console.error(`projectIndex \`${projectIndex}\` is out of range.`);
       return false;
     }
+
     this.projects[projectIndex].appendTask(task);
     insertSortedTasksByDate(this.#tasks, task);
   }

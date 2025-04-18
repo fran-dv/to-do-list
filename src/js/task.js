@@ -42,10 +42,9 @@ class Task {
   get tags() {
     return this.#tags;
   }
-  get parentProject(){
+  get parentProject() {
     return this.#parentProject;
   }
-  
 
   set title(title) {
     this.#title = title;
@@ -67,11 +66,11 @@ class Task {
 
   #isDateValid(dateString) {
     return !isNaN(new Date(dateString));
-  };
+  }
 
   set dueDate(dateString) {
     if (!this.#isDateValid(dateString)) {
-      console.error('invalid date string');
+      console.error("invalid date string");
       return;
     }
     this.#dueDate = new Date(dateString);
@@ -141,9 +140,11 @@ class Task {
     this.#tags = tagsArray;
   }
 
-  set parentProject(project){
-    if (!(project instanceof Project)){
+  set parentProject(project) {
+    if (!(project instanceof Project)) {
+      console.error("Please pass a valid Project instance");
       this.#parentProject = null;
+      return;
     }
     this.#parentProject = project;
   }

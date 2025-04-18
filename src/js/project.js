@@ -27,8 +27,9 @@ class Project {
     if (!(task instanceof Task)){
       return false;
     }
-    this.#tasks.push(task);
+
     task.parentProject = this;
+    this.#tasks.push(task);
   }
 
   removeTask(taskIndex) {

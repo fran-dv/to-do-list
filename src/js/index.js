@@ -54,10 +54,10 @@ const handlePageClicks = (e) => {
       Content.updateContent(CurrentUser);
       break;
     case "new-task":
-      TaskEditor.popUp();
+      TaskEditor.popUp(CurrentUser);
       break;
     case "edit-task":
-      TaskEditor.popUp();
+      TaskEditor.popUp(CurrentUser, target);
       break;
     case "finished-tasks":
       Content.loadMainContent(CurrentUser, "finished");
