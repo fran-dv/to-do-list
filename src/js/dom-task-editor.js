@@ -2,6 +2,8 @@ import { DateUtils } from "./date-utils";
 import { Task } from "./task";
 import "/src/css/task-editor.css";
 import deleteSubtaskImg from "/src/assets/image/delete.svg";
+import { User } from "./user";
+import { SubTask } from "./subtask";
 
 export const TaskEditor = (() => {
   const classes = {
@@ -25,10 +27,25 @@ export const TaskEditor = (() => {
     input.checked = input.checked ? false : true;
   };
 
-  const _removeFormPopulation = (task) => {
+  const _removeFormPopulation = (task, controllersToAbort = []) => {
     if (!(task instanceof Task)) {
       console.error("Please pass a Task instance");
       return;
+    }
+    if (!Array.isArray(controllersToAbort)) {
+      console.error("Please pass a valid array with the controller/s to abort");
+      return;
+    } else {
+      controllersToAbort.forEach((item) => {
+        if (!(item instanceof AbortController)) {
+          console.error(
+            `Item ${controllersToAbort.indexOf(
+              item
+            )} is not a valid ControllerAbort instance`
+          );
+          return;
+        }
+      });
     }
 
     const form = document.querySelector("#edit-task-form");
@@ -67,13 +84,30 @@ export const TaskEditor = (() => {
     while (subtasksDiv.firstChild !== newSubtaskInput) {
       subtasksDiv.firstChild.remove();
     }
+
+    // remove abort controllers
+    controllersToAbort.forEach((controller) => {
+      controller.abort();
+    });
   };
 
-  const _generateSubtaskDiv = (subtask, subtaskNumber) => {
+  const _generateSubtaskDiv = (
+    subtask,
+    subtaskNumber = "-1",
+    parentTaskIndex = "-1"
+  ) => {
     const container = document.createElement("div");
     container.classList.add("sub", "task");
     container.setAttribute("data-index", subtaskNumber);
     container.setAttribute("data-completed", subtask.status ? "1" : "0");
+    container.setAttribute("data-parent-index", parentTaskIndex);
+
+    // hidden text input with subtask title
+    const titleInput = document.createElement("input");
+    titleInput.type = "text";
+    titleInput.classList.add("hidden");
+    titleInput.id = `title-subtask-${subtaskNumber}`;
+    titleInput.value = subtask.title;
 
     // radio input
     const input = document.createElement("input");
@@ -107,6 +141,66 @@ export const TaskEditor = (() => {
     container.appendChild(deleteDiv);
 
     return container;
+  };
+
+  const _handleSubtaskSubmits = (
+    subtasksDiv,
+    user,
+    input,
+    controller,
+    keydownEvent = null,
+    blur = false
+  ) => {
+    if (keydownEvent && !(keydownEvent instanceof KeyboardEvent)) {
+      console.error("Invalid Keydown event. It must be KeyboardEvent type");
+      return;
+    }
+    if (keydownEvent && keydownEvent.code !== "Enter") {
+      return;
+    }
+    if (
+      !subtasksDiv ||
+      subtasksDiv.tagName !== "DIV" ||
+      !subtasksDiv.classList.contains("subtasks")
+    ) {
+      console.error("Please pass a valid subtasks div container");
+      return;
+    }
+    if (!user || !(user instanceof User)) {
+      console.error("Please pass a valid User object");
+      return;
+    }
+    if (!input || input.tagName !== "INPUT") {
+      console.error("Please pass a valid text input element");
+      return;
+    }
+
+    if (input.value === "") {
+      return;
+    }
+
+    if (!controller || !(controller instanceof AbortController)) {
+      console.error("Please pass a valid AbortController to remove listeners");
+      return;
+    }
+
+    if (!keydownEvent && !blur) {
+      return;
+    }
+
+    const taskIndex = input
+      .closest("#edit-task-form")
+      .getAttribute("data-index");
+    if (!taskIndex) {
+      return;
+    }
+
+    const newSubtaskDiv = _generateSubtaskDiv(new SubTask(input.value));
+    subtasksDiv.insertBefore(
+      newSubtaskDiv,
+      subtasksDiv.querySelector("#new-subtask")
+    );
+    input.value = "";
   };
 
   const popUp = (user, taskDiv = null) => {
@@ -177,10 +271,46 @@ export const TaskEditor = (() => {
       }
     }
 
+    const controller = new AbortController();
+    addSubtaskInput.addEventListener(
+      "keydown",
+      (e) =>
+        _handleSubtaskSubmits(
+          subtasksDiv,
+          user,
+          addSubtaskInput,
+          controller,
+          e
+        ),
+      {
+        signal: controller.signal,
+      }
+    );
+    addSubtaskInput.addEventListener(
+      "blur",
+      () =>
+        _handleSubtaskSubmits(
+          subtasksDiv,
+          user,
+          addSubtaskInput,
+          controller,
+          null,
+          true
+        ),
+      {
+        signal: controller.signal,
+      }
+    );
+
     dialog.showModal();
-    dialog.addEventListener("close", () => _removeFormPopulation(task), {
-      once: true,
-    });
+
+    dialog.addEventListener(
+      "close",
+      () => _removeFormPopulation(task, [controller]),
+      {
+        once: true,
+      }
+    );
   };
 
   const clickOnClose = (user, saveChanges = false) => {

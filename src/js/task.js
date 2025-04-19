@@ -1,7 +1,7 @@
 import { Project } from "./project";
 import { SubTask } from "./subtask";
 
-class Task {
+export class Task {
   #title;
   #description;
   #completed;
@@ -176,4 +176,3 @@ class Task {
   }
 }
 
-export { Task, SubTask };
