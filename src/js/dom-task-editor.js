@@ -11,7 +11,7 @@ export const TaskEditor = (() => {
     selected: "selected",
   };
 
-  const _toggleSelected = (priorityOption, input, remove = false) => {
+  const _togglePrioritySelection = (priorityOption, input, remove = false) => {
     if (
       !priorityOption ||
       priorityOption.tagName !== "DIV" ||
@@ -35,21 +35,15 @@ export const TaskEditor = (() => {
     input.checked = true;
   };
 
-  const _emptySubtasksDiv = () => {
-    const form = document.querySelector("#edit-task-form")
-    const newSubtaskInput = form.querySelector("#new-subtask");
-    const subtasksDiv = form.querySelector(".subtasks");
-    // remove all subtasks but no the input
-    while (subtasksDiv.firstChild !== newSubtaskInput) {
-      subtasksDiv.firstChild.remove();
-    }
-  }
-
   const _getPriorityDiv = (priorityValue) => {
     const form = document.querySelector("#edit-task-form");
+    const defaultPriorityValue = 0;
     if (priorityValue === null){
-      // return selected div if null is passed
-      return form.querySelector(`.priority-option.selected`);
+      const selectedOption = form.querySelector(`.priority-option.selected`);
+      if (selectedOption) {
+        return form.querySelector(`.priority-option.selected`);
+      }
+      priorityValue = defaultPriorityValue;
     }
 
     if (
@@ -68,16 +62,30 @@ export const TaskEditor = (() => {
     return currentPriority;
   }
 
+
+  const _emptySubtasksDiv = () => {
+    const form = document.querySelector("#edit-task-form")
+    const newSubtaskInput = form.querySelector("#new-subtask");
+    const subtasksDiv = form.querySelector(".subtasks");
+    // remove all subtasks but no the input
+    while (subtasksDiv.firstChild !== newSubtaskInput) {
+      subtasksDiv.firstChild.remove();
+    }
+  }
+
   const _loadPriorityOptions = (task = null) => {
-    if(task && !(task instanceof Task)) {
+
+    if(task !== null && !(task instanceof Task)) {
       console.error("Invalid task. It should be a Task instance");
       return;
     }
-    console.log(task.priority)
-    const currentPriorityDiv = _getPriorityDiv(task.priority);
+
+    const priorityValue = task === null ? null : task.priority;
+
+    const currentPriorityDiv = _getPriorityDiv(priorityValue);
     const currentPriorityInput = currentPriorityDiv.querySelector("input");
     currentPriorityInput.checked = true;
-    _toggleSelected(currentPriorityDiv, currentPriorityInput);
+    _togglePrioritySelection(currentPriorityDiv, currentPriorityInput);
   
     
   }
@@ -117,7 +125,7 @@ export const TaskEditor = (() => {
     const priorityDiv = _getPriorityDiv(null);
     const priorityInput = priorityDiv.querySelector("input");
     const removeSelection = true;
-    _toggleSelected(priorityDiv, priorityInput, removeSelection)
+    _togglePrioritySelection(priorityDiv, priorityInput, removeSelection)
 
     const dateInput = form.querySelector("#date-input");
     dateInput.value = "";
@@ -330,7 +338,7 @@ export const TaskEditor = (() => {
 
     // creating new task
     if (!taskDiv || !taskDiv.classList.contains("task")) {
-      _loadPriorityOptions();
+      _loadPriorityOptions(null);
       _loadProjectDropdown();
       dialog.showModal();
       return;
@@ -485,9 +493,9 @@ export const TaskEditor = (() => {
       "input[type='radio']"
     );
     const removeSelection = true;
-    _toggleSelected(selectedPriorDiv, selectedPriorInput, removeSelection);
+    _togglePrioritySelection(selectedPriorDiv, selectedPriorInput, removeSelection);
 
-    _toggleSelected(priorityDiv, priorityInput);
+    _togglePrioritySelection(priorityDiv, priorityInput);
   };
 
   const clickOnDeleteSubtask = (user, subtaskDiv) =>{
