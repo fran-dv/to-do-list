@@ -90,11 +90,11 @@ export const TaskEditor = (() => {
     
   }
 
-  const _removeFormPopulation = (task, controllersToAbort = []) => {
-    if (!(task instanceof Task)) {
-      console.error("Please pass a Task instance");
-      return;
-    }
+  const _removeFormPopulation = ( controllersToAbort = []) => {
+    // if (!(task instanceof Task)) {
+    //   console.error("Please pass a Task instance");
+    //   return;
+    // }
     if (!Array.isArray(controllersToAbort)) {
       console.error("Please pass a valid array with the controller/s to abort");
       return;
@@ -341,6 +341,7 @@ export const TaskEditor = (() => {
       _loadPriorityOptions(null);
       _loadProjectDropdown();
       dialog.showModal();
+      dialog.addEventListener("close",() => _removeFormPopulation(), {once: true,});
       return;
     }
 
@@ -388,7 +389,7 @@ export const TaskEditor = (() => {
 
     dialog.addEventListener(
       "close",
-      () => _removeFormPopulation(task, [controller]),
+      () => _removeFormPopulation([controller]),
       {
         once: true,
       }
