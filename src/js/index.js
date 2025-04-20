@@ -78,6 +78,9 @@ const handlePageClicks = (e) => {
     case "select-priority":
       TaskEditor.clickOnSelectPriority(target);
       break;
+    case "delete-subtask":
+      TaskEditor.clickOnDeleteSubtask(CurrentUser, target.closest(".sub.task"));
+      break;
   }
 };
 

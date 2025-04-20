@@ -27,6 +27,16 @@ export const TaskEditor = (() => {
     input.checked = input.checked ? false : true;
   };
 
+  const _emptySubtasksDiv = () => {
+    const form = document.querySelector("#edit-task-form")
+    const newSubtaskInput = form.querySelector("#new-subtask");
+    const subtasksDiv = form.querySelector(".subtasks");
+    // remove all subtasks but no the input
+    while (subtasksDiv.firstChild !== newSubtaskInput) {
+      subtasksDiv.firstChild.remove();
+    }
+  }
+
   const _removeFormPopulation = (task, controllersToAbort = []) => {
     if (!(task instanceof Task)) {
       console.error("Please pass a Task instance");
@@ -79,11 +89,7 @@ export const TaskEditor = (() => {
     const newSubtaskInput = form.querySelector("#new-subtask");
     newSubtaskInput.value = "";
 
-    const subtasksDiv = form.querySelector(".subtasks");
-    // remove all subtasks but no the input
-    while (subtasksDiv.firstChild !== newSubtaskInput) {
-      subtasksDiv.firstChild.remove();
-    }
+    _emptySubtasksDiv();
 
     // remove abort controllers
     controllersToAbort.forEach((controller) => {
@@ -134,6 +140,7 @@ export const TaskEditor = (() => {
     // delete button
     const deleteDiv = document.createElement("div");
     deleteDiv.classList.add("delete");
+    deleteDiv.setAttribute("data-click", "delete-subtask");
     const deleteImg = document.createElement("img");
     deleteImg.alt = "Delete subtask";
     deleteImg.src = deleteSubtaskImg;
@@ -203,6 +210,21 @@ export const TaskEditor = (() => {
     input.value = "";
   };
 
+  const _loadSubtasks = (subtasks, subtasksDiv, emptyContainerBefore=false) => {
+    const form = document.querySelector("#edit-task-form")
+    const addSubtaskInput = form.querySelector("#new-subtask");
+    if (subtasks && subtasks.length > -1) {
+      if (emptyContainerBefore){
+        _emptySubtasksDiv();
+      }
+
+      for (let i = 0; i < subtasks.length; i++) {
+        const subtaskDiv = _generateSubtaskDiv(subtasks[i], i);
+        subtasksDiv.insertBefore(subtaskDiv, addSubtaskInput);
+      }
+    }
+  }
+
   const popUp = (user, taskDiv = null) => {
     const dialog = document.querySelector("#task-editor-dialog");
     const projectP = dialog.querySelector(".task-project");
@@ -264,12 +286,8 @@ export const TaskEditor = (() => {
     const subtasks = task.subtasks;
     const subtasksDiv = form.querySelector(".subtasks");
     const addSubtaskInput = form.querySelector("#new-subtask");
-    if (subtasks && subtasks.length > -1) {
-      for (let i = 0; i < subtasks.length; i++) {
-        const subtaskDiv = _generateSubtaskDiv(subtasks[i], i);
-        subtasksDiv.insertBefore(subtaskDiv, addSubtaskInput);
-      }
-    }
+    
+    _loadSubtasks(subtasks, subtasksDiv);
 
     const controller = new AbortController();
     addSubtaskInput.addEventListener(
@@ -416,11 +434,41 @@ export const TaskEditor = (() => {
     _toggleSelected(priorityDiv, priorityInput);
   };
 
+  const clickOnDeleteSubtask = (user, subtaskDiv) =>{
+    if (
+      !subtaskDiv || 
+      subtaskDiv.tagName !== "DIV" || 
+      !subtaskDiv.classList.contains("sub", "task")
+    ){
+      console.error("Please pass a valid subtask div");
+      return;
+    }
+    
+    const parentForm = subtaskDiv.closest("#edit-task-form");
+    const parentTaskIndex = parseInt(parentForm.getAttribute("data-index"));
+    const isParentTaskNew = parentTaskIndex === -1;
+    const subtaskIndex = parseInt(subtaskDiv.getAttribute("data-index"))
+    const isSubtaskNew = subtaskIndex === -1;
+
+    if (!isParentTaskNew && !isSubtaskNew){
+      const parentTask = user.tasks[parentTaskIndex];
+      console.log(`Task index: ${parentTaskIndex}. Subtask index: ${subtaskIndex}`)
+      parentTask.removeSubtask(subtaskIndex);
+      console.log("reassigning indexes...")
+      const subtasksDiv = parentForm.querySelector(".subtasks");
+      _loadSubtasks(parentTask.subtasks, subtasksDiv, true);
+      console.log(`Succesful!!`);
+    }
+
+    subtaskDiv.remove();
+  }
+
   return {
     popUp,
     clickOnCheckTask,
     clickOnClose,
     clickOnDatePicker,
     clickOnSelectPriority,
+    clickOnDeleteSubtask,
   };
 })();
