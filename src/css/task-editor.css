@@ -156,28 +156,28 @@ img[data-priority="3"] {
   background-color: var(--tertiary-color-transparent);
 }
 
-#project-dropdown {
+#project-selector {
   padding: 0.25rem 0;
   border-bottom: 2px solid var(--tertiary-color);
 }
 
-#project-dropdown button {
+#project-selector button {
   background-color: inherit;
   border: none;
   border-radius: 1rem;
   padding: 0.5rem;
 }
 
-#project-dropdown button:focus {
+#project-selector button:focus {
   outline: 1px solid var(--secondary-color);
 }
 
-#project-dropdown button:hover {
+#project-selector button:hover {
   background-color: var(--tertiary-color-transparent);
   cursor: pointer;
 }
 
-#project-dropdown .task-project {
+#project-selector .task-project {
   font-size: 1.5rem;
   color: var(--secondary-color);
 }

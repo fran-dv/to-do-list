@@ -11,9 +11,10 @@ export const TaskEditor = (() => {
     selected: "selected",
   };
 
-  const _toggleSelected = (priorityOption, input) => {
+  const _toggleSelected = (priorityOption, input, remove = false) => {
     if (
       !priorityOption ||
+      priorityOption.tagName !== "DIV" ||
       !priorityOption.classList.contains("priority-option") ||
       !input ||
       input.tagName !== "INPUT" ||
@@ -23,8 +24,15 @@ export const TaskEditor = (() => {
       return;
     }
 
-    priorityOption.classList.toggle(classes.selected);
-    input.checked = input.checked ? false : true;
+    if (remove) {
+      console.log("removing...")
+      priorityOption.classList.remove(classes.selected);
+      input.checked = false;
+      return;
+    }
+
+    priorityOption.classList.add(classes.selected);
+    input.checked = true;
   };
 
   const _emptySubtasksDiv = () => {
@@ -35,6 +43,43 @@ export const TaskEditor = (() => {
     while (subtasksDiv.firstChild !== newSubtaskInput) {
       subtasksDiv.firstChild.remove();
     }
+  }
+
+  const _getPriorityDiv = (priorityValue) => {
+    const form = document.querySelector("#edit-task-form");
+    if (priorityValue === null){
+      // return selected div if null is passed
+      return form.querySelector(`.priority-option.selected`);
+    }
+
+    if (
+      priorityValue === undefined || 
+      priorityValue < 0 ||
+      priorityValue > 3
+    ) {
+      console.error(`Invalid priority value: ${priorityValue}. It should be a number from 0 to 3`);
+      return false;
+    }
+
+    const currentPriority = form.querySelector(
+      `.priority-option[data-priority="${priorityValue}"]`
+    );
+    
+    return currentPriority;
+  }
+
+  const _loadPriorityOptions = (task = null) => {
+    if(task && !(task instanceof Task)) {
+      console.error("Invalid task. It should be a Task instance");
+      return;
+    }
+    console.log(task.priority)
+    const currentPriorityDiv = _getPriorityDiv(task.priority);
+    const currentPriorityInput = currentPriorityDiv.querySelector("input");
+    currentPriorityInput.checked = true;
+    _toggleSelected(currentPriorityDiv, currentPriorityInput);
+  
+    
   }
 
   const _removeFormPopulation = (task, controllersToAbort = []) => {
@@ -68,17 +113,16 @@ export const TaskEditor = (() => {
       checkInput.checked = false;
     }
 
+    // reset priority selector (deselect)
+    const priorityDiv = _getPriorityDiv(null);
+    const priorityInput = priorityDiv.querySelector("input");
+    const removeSelection = true;
+    _toggleSelected(priorityDiv, priorityInput, removeSelection)
+
     const dateInput = form.querySelector("#date-input");
     dateInput.value = "";
     const dateP = form.querySelector("#current-task-date");
     dateP.textContent = "Due date";
-
-    // toggle priority options
-    const selectedPriorDiv = form.querySelector(
-      `.priority-option[data-priority="${task.priority}"]`
-    );
-    const priorInput = selectedPriorDiv.querySelector("input");
-    _toggleSelected(selectedPriorDiv, priorInput);
 
     const titleInput = form.querySelector("#task-title");
     titleInput.value = "";
@@ -225,6 +269,56 @@ export const TaskEditor = (() => {
     }
   }
 
+  const _loadSubtasksSection = (user, task, form, controller) => {
+     // subtasks section
+     const subtasks = task.subtasks;
+     const subtasksDiv = form.querySelector(".subtasks");
+     const addSubtaskInput = form.querySelector("#new-subtask");
+     
+     _loadSubtasks(subtasks, subtasksDiv);
+ 
+     addSubtaskInput.addEventListener(
+       "keydown",
+       (e) =>
+         _handleSubtaskSubmits(
+           subtasksDiv,
+           user,
+           addSubtaskInput,
+           controller,
+           e
+         ),
+       {
+         signal: controller.signal,
+       }
+     );
+     
+     addSubtaskInput.addEventListener(
+       "blur",
+       () =>
+         _handleSubtaskSubmits(
+           subtasksDiv,
+           user,
+           addSubtaskInput,
+           controller,
+           null,
+           true
+         ),
+       {
+         signal: controller.signal,
+       }
+     );
+  }
+
+  
+
+  const _loadProjectDropdown = (user, dropDiv, dropBtn, dropContent) => {
+
+    // projectP.textContent = user.projects[0].title;
+
+
+
+  }
+
   const popUp = (user, taskDiv = null) => {
     const dialog = document.querySelector("#task-editor-dialog");
     const projectP = dialog.querySelector(".task-project");
@@ -236,12 +330,13 @@ export const TaskEditor = (() => {
 
     // creating new task
     if (!taskDiv || !taskDiv.classList.contains("task")) {
-      projectP.textContent = user.projects[0].title;
+      _loadPriorityOptions();
+      _loadProjectDropdown();
       dialog.showModal();
       return;
     }
 
-    // edit existing task
+    // editing existing task
     const taskIndex = parseInt(taskDiv.dataset.index);
     const task = user.tasks[taskIndex];
 
@@ -267,12 +362,7 @@ export const TaskEditor = (() => {
     }
 
     // priority options
-    const currentPriority = form.querySelector(
-      `.priority-option[data-priority="${task.priority}"]`
-    );
-    const currentPriorityInput = currentPriority.querySelector("input");
-    currentPriorityInput.checked = true;
-    _toggleSelected(currentPriority, currentPriorityInput);
+    _loadPriorityOptions(task);
 
     // task title
     const taskTitleInput = form.querySelector("#task-title");
@@ -282,43 +372,9 @@ export const TaskEditor = (() => {
     const taskDescriptionInput = form.querySelector("#task-description");
     taskDescriptionInput.value = task.description;
 
-    // subtasks section
-    const subtasks = task.subtasks;
-    const subtasksDiv = form.querySelector(".subtasks");
-    const addSubtaskInput = form.querySelector("#new-subtask");
-    
-    _loadSubtasks(subtasks, subtasksDiv);
+    const controller = new AbortController();    
 
-    const controller = new AbortController();
-    addSubtaskInput.addEventListener(
-      "keydown",
-      (e) =>
-        _handleSubtaskSubmits(
-          subtasksDiv,
-          user,
-          addSubtaskInput,
-          controller,
-          e
-        ),
-      {
-        signal: controller.signal,
-      }
-    );
-    addSubtaskInput.addEventListener(
-      "blur",
-      () =>
-        _handleSubtaskSubmits(
-          subtasksDiv,
-          user,
-          addSubtaskInput,
-          controller,
-          null,
-          true
-        ),
-      {
-        signal: controller.signal,
-      }
-    );
+    _loadSubtasksSection(user, task, form, controller);
 
     dialog.showModal();
 
@@ -428,9 +484,9 @@ export const TaskEditor = (() => {
     const selectedPriorInput = selectedPriorDiv.querySelector(
       "input[type='radio']"
     );
-    _toggleSelected(selectedPriorDiv, selectedPriorInput);
+    const removeSelection = true;
+    _toggleSelected(selectedPriorDiv, selectedPriorInput, removeSelection);
 
-    // select pressed priority
     _toggleSelected(priorityDiv, priorityInput);
   };
 
@@ -452,12 +508,9 @@ export const TaskEditor = (() => {
 
     if (!isParentTaskNew && !isSubtaskNew){
       const parentTask = user.tasks[parentTaskIndex];
-      console.log(`Task index: ${parentTaskIndex}. Subtask index: ${subtaskIndex}`)
       parentTask.removeSubtask(subtaskIndex);
-      console.log("reassigning indexes...")
       const subtasksDiv = parentForm.querySelector(".subtasks");
       _loadSubtasks(parentTask.subtasks, subtasksDiv, true);
-      console.log(`Succesful!!`);
     }
 
     subtaskDiv.remove();
