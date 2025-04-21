@@ -114,12 +114,26 @@ class User {
     }
   }
 
+  getProjectIndex(project) {
+    if (!(project instanceof Project)) {
+      console.error("Invalid project. It should be an instance of Project");
+      return;
+    }
+
+    for (let i = 0; i < this.projects.length; i++) {
+      if (this.projects[i].title === project.title) {
+        return i;
+      }
+      return null;
+    }
+  }
+
   #isProjectsArray(projectsArray) {
     if (!Array.isArray(projectsArray)) {
       return false;
     }
     projectsArray.forEach((proj) => {
-      if (!(proj instanceof Task)) {
+      if (!(proj instanceof Project)) {
         return false;
       }
     });

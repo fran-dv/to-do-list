@@ -25,7 +25,7 @@ export const TaskEditor = (() => {
     }
 
     if (remove) {
-      console.log("removing...")
+      console.log("removing...");
       priorityOption.classList.remove(classes.selected);
       input.checked = false;
       return;
@@ -38,7 +38,7 @@ export const TaskEditor = (() => {
   const _getPriorityDiv = (priorityValue) => {
     const form = document.querySelector("#edit-task-form");
     const defaultPriorityValue = 0;
-    if (priorityValue === null){
+    if (priorityValue === null) {
       const selectedOption = form.querySelector(`.priority-option.selected`);
       if (selectedOption) {
         return form.querySelector(`.priority-option.selected`);
@@ -46,36 +46,32 @@ export const TaskEditor = (() => {
       priorityValue = defaultPriorityValue;
     }
 
-    if (
-      priorityValue === undefined || 
-      priorityValue < 0 ||
-      priorityValue > 3
-    ) {
-      console.error(`Invalid priority value: ${priorityValue}. It should be a number from 0 to 3`);
+    if (priorityValue === undefined || priorityValue < 0 || priorityValue > 3) {
+      console.error(
+        `Invalid priority value: ${priorityValue}. It should be a number from 0 to 3`
+      );
       return false;
     }
 
     const currentPriority = form.querySelector(
       `.priority-option[data-priority="${priorityValue}"]`
     );
-    
-    return currentPriority;
-  }
 
+    return currentPriority;
+  };
 
   const _emptySubtasksDiv = () => {
-    const form = document.querySelector("#edit-task-form")
+    const form = document.querySelector("#edit-task-form");
     const newSubtaskInput = form.querySelector("#new-subtask");
     const subtasksDiv = form.querySelector(".subtasks");
     // remove all subtasks but no the input
     while (subtasksDiv.firstChild !== newSubtaskInput) {
       subtasksDiv.firstChild.remove();
     }
-  }
+  };
 
   const _loadPriorityOptions = (task = null) => {
-
-    if(task !== null && !(task instanceof Task)) {
+    if (task !== null && !(task instanceof Task)) {
       console.error("Invalid task. It should be a Task instance");
       return;
     }
@@ -86,67 +82,6 @@ export const TaskEditor = (() => {
     const currentPriorityInput = currentPriorityDiv.querySelector("input");
     currentPriorityInput.checked = true;
     _togglePrioritySelection(currentPriorityDiv, currentPriorityInput);
-  
-    
-  }
-
-  const _removeFormPopulation = ( controllersToAbort = []) => {
-    // if (!(task instanceof Task)) {
-    //   console.error("Please pass a Task instance");
-    //   return;
-    // }
-    if (!Array.isArray(controllersToAbort)) {
-      console.error("Please pass a valid array with the controller/s to abort");
-      return;
-    } else {
-      controllersToAbort.forEach((item) => {
-        if (!(item instanceof AbortController)) {
-          console.error(
-            `Item ${controllersToAbort.indexOf(
-              item
-            )} is not a valid ControllerAbort instance`
-          );
-          return;
-        }
-      });
-    }
-
-    const form = document.querySelector("#edit-task-form");
-    form.setAttribute("data-index", "-1");
-
-    const taskCheck = form.querySelector(".task-check");
-    const checkInput = form.querySelector(".check > input[type='checkbox']");
-    if (taskCheck.classList.contains(classes.completed)) {
-      taskCheck.classList.remove(classes.completed);
-      checkInput.checked = false;
-    }
-
-    // reset priority selector (deselect)
-    const priorityDiv = _getPriorityDiv(null);
-    const priorityInput = priorityDiv.querySelector("input");
-    const removeSelection = true;
-    _togglePrioritySelection(priorityDiv, priorityInput, removeSelection)
-
-    const dateInput = form.querySelector("#date-input");
-    dateInput.value = "";
-    const dateP = form.querySelector("#current-task-date");
-    dateP.textContent = "Due date";
-
-    const titleInput = form.querySelector("#task-title");
-    titleInput.value = "";
-
-    const descriptionInput = form.querySelector("#task-description");
-    descriptionInput.value = "";
-
-    const newSubtaskInput = form.querySelector("#new-subtask");
-    newSubtaskInput.value = "";
-
-    _emptySubtasksDiv();
-
-    // remove abort controllers
-    controllersToAbort.forEach((controller) => {
-      controller.abort();
-    });
   };
 
   const _generateSubtaskDiv = (
@@ -262,11 +197,15 @@ export const TaskEditor = (() => {
     input.value = "";
   };
 
-  const _loadSubtasks = (subtasks, subtasksDiv, emptyContainerBefore=false) => {
-    const form = document.querySelector("#edit-task-form")
+  const _loadSubtasks = (
+    subtasks,
+    subtasksDiv,
+    emptyContainerBefore = false
+  ) => {
+    const form = document.querySelector("#edit-task-form");
     const addSubtaskInput = form.querySelector("#new-subtask");
     if (subtasks && subtasks.length > -1) {
-      if (emptyContainerBefore){
+      if (emptyContainerBefore) {
         _emptySubtasksDiv();
       }
 
@@ -275,57 +214,176 @@ export const TaskEditor = (() => {
         subtasksDiv.insertBefore(subtaskDiv, addSubtaskInput);
       }
     }
-  }
+  };
 
   const _loadSubtasksSection = (user, task, form, controller) => {
-     // subtasks section
-     const subtasks = task.subtasks;
-     const subtasksDiv = form.querySelector(".subtasks");
-     const addSubtaskInput = form.querySelector("#new-subtask");
-     
-     _loadSubtasks(subtasks, subtasksDiv);
- 
-     addSubtaskInput.addEventListener(
-       "keydown",
-       (e) =>
-         _handleSubtaskSubmits(
-           subtasksDiv,
-           user,
-           addSubtaskInput,
-           controller,
-           e
-         ),
-       {
-         signal: controller.signal,
-       }
-     );
-     
-     addSubtaskInput.addEventListener(
-       "blur",
-       () =>
-         _handleSubtaskSubmits(
-           subtasksDiv,
-           user,
-           addSubtaskInput,
-           controller,
-           null,
-           true
-         ),
-       {
-         signal: controller.signal,
-       }
-     );
-  }
+    // subtasks section
+    const subtasks = task.subtasks;
+    const subtasksDiv = form.querySelector(".subtasks");
+    const addSubtaskInput = form.querySelector("#new-subtask");
 
-  
+    _loadSubtasks(subtasks, subtasksDiv);
 
-  const _loadProjectDropdown = (user, dropDiv, dropBtn, dropContent) => {
+    addSubtaskInput.addEventListener(
+      "keydown",
+      (e) =>
+        _handleSubtaskSubmits(
+          subtasksDiv,
+          user,
+          addSubtaskInput,
+          controller,
+          e
+        ),
+      {
+        signal: controller.signal,
+      }
+    );
 
-    // projectP.textContent = user.projects[0].title;
+    addSubtaskInput.addEventListener(
+      "blur",
+      () =>
+        _handleSubtaskSubmits(
+          subtasksDiv,
+          user,
+          addSubtaskInput,
+          controller,
+          null,
+          true
+        ),
+      {
+        signal: controller.signal,
+      }
+    );
+  };
 
+  const _generateDropdownItem = (title, index) => {
+    const item = document.createElement("div");
+    item.classList.add("drop-menu-item");
+    item.setAttribute("data-index", `${index}`);
+    const p = document.createElement("p");
+    p.textContent = title;
+    item.appendChild(p);
 
+    return item;
+  };
 
-  }
+  const _destroyProjectDropdown = () => {
+    const form = document.querySelector("#edit-task-form");
+    const dropDiv = form.querySelector("#project-selector");
+    const projectP = dropDiv.querySelector(".task-project");
+    const dropContent = dropDiv.querySelector("#project-dropdown-content");
+
+    projectP.textContent = "";
+    while (dropContent.firstChild) {
+      dropContent.firstChild.remove();
+    }
+  };
+
+  const _loadProjectDropdown = (user, controller, projectIndex = null) => {
+    if (!user || !(user instanceof User)) {
+      console.error("Please pass a valid user. It should be an User instance");
+      return;
+    }
+    if (!controller || !(controller instanceof AbortController)) {
+      console.error(
+        "Invalid abort controller. It should be an AbortController instance"
+      );
+      return;
+    }
+    if (
+      projectIndex !== null &&
+      (typeof projectIndex !== "number" ||
+        projectIndex < 0 ||
+        projectIndex >= user.projects.length)
+    ) {
+      console.error(
+        "Invalid project index. It should be null or a number within range of user's projects array"
+      );
+      return;
+    }
+
+    const form = document.querySelector("#edit-task-form");
+    const dropDiv = form.querySelector("#project-selector");
+    const projectInput = dropDiv.querySelector("#project-input");
+    const dropBtn = dropDiv.querySelector(".dropdown-btn");
+    const projectP = dropBtn.querySelector(".task-project");
+    const dropContent = dropDiv.querySelector("#project-dropdown-content");
+
+    const projects = user.projects;
+    for (let i = 0; i < projects.length; i++) {
+      const currentProjectTitle = projects[i].title;
+      const item = _generateDropdownItem(currentProjectTitle, i);
+      dropContent.appendChild(item);
+    }
+
+    const defaultProjectIndex = 0;
+    const index = projectIndex ? projectIndex : defaultProjectIndex;
+
+    dropDiv.setAttribute("data-project-index", `${index}`);
+    projectInput.value = index;
+    projectP.textContent = user.projects[index].title;
+  };
+
+  const _removeFormPopulation = (controllersToAbort = []) => {
+    if (!Array.isArray(controllersToAbort)) {
+      console.error("Please pass a valid array with the controller/s to abort");
+      return;
+    } else {
+      controllersToAbort.forEach((item) => {
+        if (!(item instanceof AbortController)) {
+          console.error(
+            `Item ${controllersToAbort.indexOf(
+              item
+            )} is not a valid ControllerAbort instance`
+          );
+          return;
+        }
+      });
+    }
+
+    const form = document.querySelector("#edit-task-form");
+    form.setAttribute("data-index", "-1");
+
+    const taskCheck = form.querySelector(".task-check");
+    const checkInput = form.querySelector(".check > input[type='checkbox']");
+    if (taskCheck.classList.contains(classes.completed)) {
+      taskCheck.classList.remove(classes.completed);
+      checkInput.checked = false;
+    }
+
+    // reset date picker
+    const dateInput = form.querySelector("#date-input");
+    dateInput.value = "";
+    const dateP = form.querySelector("#current-task-date");
+    dateP.textContent = "Due date";
+
+    // reset priority selector (deselect)
+    const priorityDiv = _getPriorityDiv(null);
+    const priorityInput = priorityDiv.querySelector("input");
+    const removeSelection = true;
+    _togglePrioritySelection(priorityDiv, priorityInput, removeSelection);
+
+    // reset project selector
+    _destroyProjectDropdown();
+
+    // reset title
+    const titleInput = form.querySelector("#task-title");
+    titleInput.value = "";
+
+    // reset description
+    const descriptionInput = form.querySelector("#task-description");
+    descriptionInput.value = "";
+
+    // reset subtasks
+    const newSubtaskInput = form.querySelector("#new-subtask");
+    newSubtaskInput.value = "";
+    _emptySubtasksDiv();
+
+    // remove abort controllers
+    controllersToAbort.forEach((controller) => {
+      controller.abort();
+    });
+  };
 
   const popUp = (user, taskDiv = null) => {
     const dialog = document.querySelector("#task-editor-dialog");
@@ -336,16 +394,22 @@ export const TaskEditor = (() => {
     const today = new Date().toISOString().split("T")[0];
     dateInput.min = today;
 
-    // creating new task
+    const controller = new AbortController();
+
+    // - creating new task
+
     if (!taskDiv || !taskDiv.classList.contains("task")) {
       _loadPriorityOptions(null);
-      _loadProjectDropdown();
+      _loadProjectDropdown(user, controller);
       dialog.showModal();
-      dialog.addEventListener("close",() => _removeFormPopulation(), {once: true,});
+      dialog.addEventListener("close", () => _removeFormPopulation(), {
+        once: true,
+      });
       return;
     }
 
-    // editing existing task
+    // - editing existing task
+
     const taskIndex = parseInt(taskDiv.dataset.index);
     const task = user.tasks[taskIndex];
 
@@ -354,7 +418,9 @@ export const TaskEditor = (() => {
     const checkInput = form.querySelector(".check > input[type='checkbox']");
 
     // task parent project
-    projectP.textContent = task.parentProject.title;
+    const parentProject = task.parentProject;
+    const parentProjectIndex = user.getProjectIndex(parentProject);
+    _loadProjectDropdown(user, controller, parentProjectIndex);
 
     // task status
     if (task.status) {
@@ -380,8 +446,6 @@ export const TaskEditor = (() => {
     // task description
     const taskDescriptionInput = form.querySelector("#task-description");
     taskDescriptionInput.value = task.description;
-
-    const controller = new AbortController();    
 
     _loadSubtasksSection(user, task, form, controller);
 
@@ -494,28 +558,32 @@ export const TaskEditor = (() => {
       "input[type='radio']"
     );
     const removeSelection = true;
-    _togglePrioritySelection(selectedPriorDiv, selectedPriorInput, removeSelection);
+    _togglePrioritySelection(
+      selectedPriorDiv,
+      selectedPriorInput,
+      removeSelection
+    );
 
     _togglePrioritySelection(priorityDiv, priorityInput);
   };
 
-  const clickOnDeleteSubtask = (user, subtaskDiv) =>{
+  const clickOnDeleteSubtask = (user, subtaskDiv) => {
     if (
-      !subtaskDiv || 
-      subtaskDiv.tagName !== "DIV" || 
+      !subtaskDiv ||
+      subtaskDiv.tagName !== "DIV" ||
       !subtaskDiv.classList.contains("sub", "task")
-    ){
+    ) {
       console.error("Please pass a valid subtask div");
       return;
     }
-    
+
     const parentForm = subtaskDiv.closest("#edit-task-form");
     const parentTaskIndex = parseInt(parentForm.getAttribute("data-index"));
     const isParentTaskNew = parentTaskIndex === -1;
-    const subtaskIndex = parseInt(subtaskDiv.getAttribute("data-index"))
+    const subtaskIndex = parseInt(subtaskDiv.getAttribute("data-index"));
     const isSubtaskNew = subtaskIndex === -1;
 
-    if (!isParentTaskNew && !isSubtaskNew){
+    if (!isParentTaskNew && !isSubtaskNew) {
       const parentTask = user.tasks[parentTaskIndex];
       parentTask.removeSubtask(subtaskIndex);
       const subtasksDiv = parentForm.querySelector(".subtasks");
@@ -523,7 +591,39 @@ export const TaskEditor = (() => {
     }
 
     subtaskDiv.remove();
-  }
+  };
+
+  let isDropdownOpen = false;
+
+  const _openProjectsDropdown = (dropDiv) => {
+    const content = dropDiv.querySelector(".dropdown-content");
+    content.classList.remove("hidden");
+    isDropdownOpen = true;
+  };
+
+  const _hideProjectsDropdown = (dropDiv) => {
+    const content = dropDiv.querySelector(".dropdown-content");
+    content.classList.add("hidden");
+    isDropdownOpen = false;
+  };
+
+  const clickOnProjectsDropdown = (dropdownDiv) => {
+    if (
+      !dropdownDiv ||
+      dropdownDiv.tagName !== "DIV" ||
+      !dropdownDiv.classList.contains("dropdown")
+    ) {
+      console.error("Invalid dropdown div");
+      return;
+    }
+
+    if (isDropdownOpen) {
+      _hideProjectsDropdown(dropdownDiv);
+      return;
+    }
+
+    _openProjectsDropdown(dropdownDiv);
+  };
 
   return {
     popUp,
@@ -532,5 +632,6 @@ export const TaskEditor = (() => {
     clickOnDatePicker,
     clickOnSelectPriority,
     clickOnDeleteSubtask,
+    clickOnProjectsDropdown,
   };
 })();

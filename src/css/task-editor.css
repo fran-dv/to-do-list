@@ -159,6 +159,7 @@ img[data-priority="3"] {
 #project-selector {
   padding: 0.25rem 0;
   border-bottom: 2px solid var(--tertiary-color);
+  position: relative;
 }
 
 #project-selector button {
@@ -166,6 +167,50 @@ img[data-priority="3"] {
   border: none;
   border-radius: 1rem;
   padding: 0.5rem;
+}
+
+#project-dropdown-content {
+  position: absolute;
+  background-color: var(--secondary-color);
+  box-shadow: 3px 4px 7px rgb(0, 0, 0, 0.3);
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 20rem;
+  max-width: 20rem;
+  max-height: 30rem;
+  padding: 0.25rem;
+  overflow-y: scroll;
+}
+
+#project-dropdown-content.hidden {
+  display: none;
+}
+
+.drop-menu-item {
+  padding: 0.75rem;
+  overflow: hidden;
+  border-radius: 1rem;
+
+  flex-shrink: 0;
+}
+
+.drop-menu-item p::before {
+  content: "# ";
+}
+
+.drop-menu-item:hover {
+  background-color: var(--primary-color);
+  cursor: pointer;
+}
+
+#project-selector .drop-menu-item:hover p {
+  color: var(--secondary-color);
+}
+
+#project-selector .drop-menu-item p {
+  color: var(--primary-color);
 }
 
 #project-selector button:focus {
@@ -177,8 +222,12 @@ img[data-priority="3"] {
   cursor: pointer;
 }
 
+#project-selector .drop-menu-item p,
 #project-selector .task-project {
   font-size: 1.5rem;
+}
+
+#project-selector .task-project {
   color: var(--secondary-color);
 }
 

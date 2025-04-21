@@ -81,6 +81,9 @@ const handlePageClicks = (e) => {
     case "delete-subtask":
       TaskEditor.clickOnDeleteSubtask(CurrentUser, target.closest(".sub.task"));
       break;
+    case "projects-dropdown":
+      TaskEditor.clickOnProjectsDropdown(target);
+      break;
   }
 };
 
