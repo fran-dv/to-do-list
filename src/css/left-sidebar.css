@@ -160,6 +160,7 @@
 #projects {
   margin-top: 5%;
   margin-bottom: auto;
+  max-height: 100%;
 }
 
 .projects-collapse {
@@ -184,6 +185,7 @@
   opacity: 1;
   transition: opacity 0.2s ease-in-out;
   margin-top: 3%;
+  flex-shrink: 0;
 }
 
 .projects-collapse.collapsed + .user-projects > .add.project,
@@ -199,6 +201,12 @@
 #projects > .user-projects {
   display: flex;
   flex-direction: column;
+  max-height: 60%;
+  overflow-y: auto;
+}
+
+#projects .projects-collapse.collapsed + .user-projects {
+  overflow-y: hidden;
 }
 
 #projects .projects-collapse.collapsed + .user-projects > .project {
@@ -297,6 +305,8 @@ input::placeholder {
 
 .hidden {
   display: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 

@@ -25,6 +25,8 @@
 }
 
 body {
+  max-height: 100vh;
+  overflow-y: hidden;
   background-color: var(--primary-color);
   display: flex;
   background-color: #f9f5eb;
