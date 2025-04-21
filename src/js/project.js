@@ -32,6 +32,21 @@ class Project {
     this.#tasks.push(task);
   }
 
+  getTaskIndex(taskToFind){
+    if (!(taskToFind instanceof Task)){
+      console.error("Please pass a valid task.")
+      return;
+    }
+
+    for (let i = 0; i < this.#tasks.length; i++){
+      if (this.#tasks[i] === taskToFind){
+        return i;
+      }
+    }
+
+    return false;
+  }
+
   removeTask(taskIndex) {
     if (taskIndex >= 0 && taskIndex < this.#tasks.length) {
       this.tasks[taskIndex].parentProject = null;

@@ -100,6 +100,18 @@ class User {
     insertSortedTasksByDate(this.#tasks, task);
   }
 
+  removeTask(index) {
+    if (typeof index !== "number" || index < 0 || index > this.tasks.length) {
+      console.error("Invalid task index");
+      return;
+    }
+
+    const task = this.tasks[index];
+    const project = task.parentProject;
+    project.removeTask(project.getTaskIndex(task));
+    this.#tasks.splice(index, 1);
+  }
+
   addProject(title) {
     if (!this.#projects.includes(title)) {
       this.#projects.push(new Project(title));
@@ -110,7 +122,7 @@ class User {
   removeProject(projectName) {
     const index = this.#projects.indexOf(projectName);
     if (index !== -1) {
-      this.#projects.splice(index, 0);
+      this.#projects.splice(index, 1);
     }
   }
 
@@ -124,8 +136,8 @@ class User {
       if (this.projects[i].title === project.title) {
         return i;
       }
-      return null;
     }
+    return null;
   }
 
   #isProjectsArray(projectsArray) {

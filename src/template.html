@@ -127,7 +127,7 @@
             data-click="close-editor"
           />
         </div>
-        <form action="#" id="edit-task-form">
+        <form action="" id="edit-task-form">
           <div class="editor-header">
             <div
               class="check"
@@ -235,7 +235,7 @@
           >
             <input
               type="text"
-              name="project"
+              name="task-project"
               id="project-input"
               class="hidden"
             />
@@ -267,7 +267,7 @@
             ></textarea>
           </div>
 
-          <div class="subtasks">
+          <div class="subtasks" data-amount="0">
             <input
               type="text"
               id="new-subtask"
@@ -280,7 +280,7 @@
               type="submit"
               class="submit-button"
               data-click="delete-task"
-              form="edit-task"
+              form="edit-task-form"
             >
               <p>Delete</p>
             </button>
@@ -288,7 +288,7 @@
               type="submit"
               class="submit-button"
               data-click="save-task"
-              form="edit-task"
+              form="edit-task-form"
             >
               <p>Save</p>
             </button>

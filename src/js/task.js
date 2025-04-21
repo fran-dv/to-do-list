@@ -61,7 +61,7 @@ export class Task {
     if (!this.#isSubtasksArray(subtasksArray)) {
       return false;
     }
-    this.#subtasks = this.#subtasks;
+    this.#subtasks.push(...subtasksArray);
   }
 
   #isDateValid(dateString) {

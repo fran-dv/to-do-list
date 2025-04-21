@@ -67,7 +67,7 @@ const handlePageClicks = (e) => {
       Content.clickOnCheckTask(CurrentUser, parentTaskDiv);
       break;
     case "close-editor":
-      TaskEditor.clickOnClose(CurrentUser);
+      TaskEditor.closeEditor();
       break;
     case "complete-task-editor":
       const parentForm = target.closest("form");
@@ -88,9 +88,17 @@ const handlePageClicks = (e) => {
     case "dropdown-item":
       TaskEditor.clickOnProjectsDropdownItem(CurrentUser, target);
       break;
+    case "save-task":
+      e.preventDefault();
+      TaskEditor.saveTask(CurrentUser, target.closest("#edit-task-form"));
+      Content.updateContent(CurrentUser);
+      break;
   }
 };
 
 document.body.addEventListener("click", handlePageClicks);
+document.querySelector("#edit-task-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+});
 
 export { CurrentUser };

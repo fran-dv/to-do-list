@@ -88,6 +88,10 @@ export const TaskEditor = (() => {
     subtaskNumber = "-1",
     parentTaskIndex = "-1"
   ) => {
+    if (subtaskNumber === "-1") {
+      const subtasksDiv = document.querySelector(".subtasks");
+      subtaskNumber = subtasksDiv.dataset.amount;
+    }
     const container = document.createElement("div");
     container.classList.add("sub", "task");
     container.setAttribute("data-index", subtaskNumber);
@@ -100,6 +104,8 @@ export const TaskEditor = (() => {
     titleInput.classList.add("hidden");
     titleInput.id = `title-subtask-${subtaskNumber}`;
     titleInput.value = subtask.title;
+    titleInput.name = `title-subtask-${subtaskNumber}`;
+    container.appendChild(titleInput);
 
     // radio input
     const input = document.createElement("input");
@@ -136,6 +142,22 @@ export const TaskEditor = (() => {
     return container;
   };
 
+  const _updateSubtasksAmountAttr = (subtasksDiv, operation) => {
+    let newSubtasksAmount = parseInt(subtasksDiv.dataset.amount);
+
+    if (operation === true) {
+      ++newSubtasksAmount;
+    }
+    if (operation === false) {
+      --newSubtasksAmount;
+    }
+    if (operation === null) {
+      newSubtasksAmount = 0;
+    }
+
+    subtasksDiv.setAttribute("data-amount", newSubtasksAmount);
+  };
+
   const _handleSubtaskSubmits = (
     subtasksDiv,
     user,
@@ -150,6 +172,9 @@ export const TaskEditor = (() => {
     }
     if (keydownEvent && keydownEvent.code !== "Enter") {
       return;
+    }
+    if (keydownEvent) {
+      keydownEvent.preventDefault();
     }
     if (
       !subtasksDiv ||
@@ -181,18 +206,36 @@ export const TaskEditor = (() => {
       return;
     }
 
-    const taskIndex = input
+    const taskIndexAttr = input
       .closest("#edit-task-form")
       .getAttribute("data-index");
-    if (!taskIndex) {
+
+    if (taskIndexAttr === null || taskIndexAttr === undefined) {
+      console.error("Form parent does not contains data-index attribute");
       return;
     }
 
-    const newSubtaskDiv = _generateSubtaskDiv(new SubTask(input.value));
+    const taskIndex = parseInt(taskIndexAttr);
+    const subtaskIndex = parseInt(subtasksDiv.dataset.amount);
+    let subtask;
+
+    if (taskIndex !== -1) {
+      const task = user.tasks[taskIndex];
+      task.addSubtask(input.value);
+      subtask = task.subtasks[subtaskIndex];
+    } else {
+      subtask = new SubTask(input.value);
+    }
+
+    const newSubtaskDiv = _generateSubtaskDiv(subtask, subtaskIndex, taskIndex);
     subtasksDiv.insertBefore(
       newSubtaskDiv,
       subtasksDiv.querySelector("#new-subtask")
     );
+
+    const increment = true;
+    _updateSubtasksAmountAttr(subtasksDiv, increment);
+
     input.value = "";
   };
 
@@ -212,16 +255,19 @@ export const TaskEditor = (() => {
         const subtaskDiv = _generateSubtaskDiv(subtasks[i], i);
         subtasksDiv.insertBefore(subtaskDiv, addSubtaskInput);
       }
+
+      subtasksDiv.setAttribute("data-amount", subtasks.length);
     }
   };
 
   const _loadSubtasksSection = (user, task, form, controller) => {
     // subtasks section
-    const subtasks = task.subtasks;
     const subtasksDiv = form.querySelector(".subtasks");
     const addSubtaskInput = form.querySelector("#new-subtask");
-
-    _loadSubtasks(subtasks, subtasksDiv);
+    const subtasks = task instanceof Task ? task.subtasks : null;
+    if (subtasks) {
+      _loadSubtasks(subtasks, subtasksDiv);
+    }
 
     addSubtaskInput.addEventListener(
       "keydown",
@@ -317,7 +363,7 @@ export const TaskEditor = (() => {
     }
 
     dropDiv.setAttribute("data-project-index", `${index}`);
-    projectInput.value = index;
+    projectInput.value = String(index);
     projectP.textContent = user.projects[index].title;
   };
 
@@ -362,6 +408,7 @@ export const TaskEditor = (() => {
 
     // reset project selector
     _destroyProjectDropdown();
+    _hideProjectsDropdown(form.querySelector("#project-selector"));
 
     // reset title
     const titleInput = form.querySelector("#task-title");
@@ -375,6 +422,7 @@ export const TaskEditor = (() => {
     const newSubtaskInput = form.querySelector("#new-subtask");
     newSubtaskInput.value = "";
     _emptySubtasksDiv();
+    _updateSubtasksAmountAttr(form.querySelector(".subtasks"), null);
 
     // remove abort controllers
     controllersToAbort.forEach((controller) => {
@@ -398,6 +446,8 @@ export const TaskEditor = (() => {
     if (!taskDiv || !taskDiv.classList.contains("task")) {
       _loadPriorityOptions(null);
       _loadProjectsDropdown(user);
+      form.setAttribute("data-index", "-1");
+      _loadSubtasksSection(user, null, form, controller);
       dialog.showModal();
       dialog.addEventListener("close", () => _removeFormPopulation(), {
         once: true,
@@ -412,7 +462,7 @@ export const TaskEditor = (() => {
 
     form.setAttribute("data-index", `${taskIndex}`);
     const taskCheck = form.querySelector(".task-check");
-    const checkInput = form.querySelector(".check > input[type='checkbox']");
+    const checkInput = form.querySelector("#editor-task-check-input");
 
     // task parent project
     const parentProject = task.parentProject;
@@ -423,6 +473,8 @@ export const TaskEditor = (() => {
     if (task.status) {
       taskCheck.classList.add(classes.completed);
       checkInput.checked = true;
+    } else {
+      checkInput.checked = false;
     }
 
     // task due date
@@ -457,14 +509,8 @@ export const TaskEditor = (() => {
     );
   };
 
-  const clickOnClose = (user, saveChanges = false) => {
+  const closeEditor = () => {
     const dialog = document.querySelector("#task-editor-dialog");
-
-    const form = dialog.querySelector("#edit-task-form");
-    const currentTaskIndex = form.dataset.index;
-    if (saveChanges) {
-    }
-
     dialog.close();
   };
 
@@ -474,14 +520,11 @@ export const TaskEditor = (() => {
     }
 
     // input and check div
-    const radioInput = document.querySelector("input");
+    const radioInput = document.querySelector("#editor-task-check-input");
     const taskCheckDiv = checkDiv.querySelector(".task-check");
 
-    const status = taskCheckDiv.classList.contains(classes.completed)
-      ? false
-      : true;
     taskCheckDiv.classList.toggle(classes.completed);
-    radioInput.checked = status;
+    radioInput.checked = radioInput.checked ? false : true;
   };
 
   const _isDatePickerDiv = (datePickerDiv) => {
@@ -490,6 +533,12 @@ export const TaskEditor = (() => {
       datePickerDiv.tagName === "DIV" &&
       datePickerDiv.classList.contains("date")
     );
+  };
+
+  const _getLocalDate = (dateString) => {
+    const [year, month, day] = dateString.split("-").map(Number);
+    const localDate = new Date(year, month - 1, day);
+    return localDate;
   };
 
   const _displayDatePicked = (datePickerDiv) => {
@@ -505,9 +554,7 @@ export const TaskEditor = (() => {
       return;
     }
 
-    // Adjust date picked with local time
-    const [year, month, day] = dateInput.value.split("-").map(Number);
-    const localDate = new Date(year, month - 1, day);
+    const localDate = _getLocalDate(dateInput.value);
 
     currentDateP.textContent = DateUtils.getFormattedDate(localDate);
   };
@@ -569,13 +616,18 @@ export const TaskEditor = (() => {
     const parentTaskIndex = parseInt(parentForm.getAttribute("data-index"));
     const isParentTaskNew = parentTaskIndex === -1;
     const subtaskIndex = parseInt(subtaskDiv.getAttribute("data-index"));
-    const isSubtaskNew = subtaskIndex === -1;
+    const isSubtaskNew = !(
+      user.tasks[parentTaskIndex].subtasks[subtaskIndex] instanceof SubTask
+    );
 
+    const subtasksDiv = parentForm.querySelector(".subtasks");
     if (!isParentTaskNew && !isSubtaskNew) {
       const parentTask = user.tasks[parentTaskIndex];
       parentTask.removeSubtask(subtaskIndex);
-      const subtasksDiv = parentForm.querySelector(".subtasks");
       _loadSubtasks(parentTask.subtasks, subtasksDiv, true);
+    } else {
+      const decrement = false;
+      _updateSubtasksAmountAttr(subtasksDiv, decrement);
     }
 
     subtaskDiv.remove();
@@ -624,14 +676,86 @@ export const TaskEditor = (() => {
     _hideProjectsDropdown(dropdownDiv);
   };
 
+  const _getFormSubtasks = (task, form, formData) => {
+    const subtasksDiv = form.querySelector(".subtasks");
+    const amount = parseInt(subtasksDiv.dataset.amount);
+
+    const subtasks = [];
+    for (let i = 0; i < amount; i++) {
+      const title = formData.get(`title-subtask-${i}`);
+      const titleExists = (subtask) => subtask.title === title;
+      const exist = task.subtasks.findIndex(titleExists) !== -1 ? true : false;
+
+      if (!exist) {
+        subtasks.push(new SubTask(title));
+      }
+    }
+
+    return subtasks;
+  };
+
+  const saveTask = (user, form) => {
+    if (!form || form.tagName !== "FORM") {
+      console.error("Please pass a valid form");
+      return;
+    }
+
+    const formData = new FormData(form);
+
+    const data = {
+      status: formData.get("task-check") === null ? false : true,
+      date: formData.get("task-date") === "" ? null : formData.get("task-date"),
+      priority: parseInt(formData.get("priority")),
+      projectIndex: parseInt(formData.get("task-project")),
+      title: formData.get("task-title"),
+      description: formData.get("task-description"),
+      subtasks: (task) => _getFormSubtasks(task, form, formData),
+    };
+
+    const idxAttr = form.dataset.index;
+    const index = parseInt(idxAttr, 10);
+    const existingTask = index !== -1 && index < user.tasks.length;
+
+    let task;
+
+    if (existingTask) {
+      task = user.tasks[index];
+
+      const oldProjIdx = user.getProjectIndex(task.parentProject);
+      if (oldProjIdx !== data.projectIndex) {
+        user.removeTask(index);
+        user.addTask(task, data.projectIndex);
+      }
+    } else {
+      task = new Task(data.title);
+    }
+
+    task.title = data.title;
+    task.description = data.description;
+    task.status = data.status;
+    if (data.date) {
+      const localDate = _getLocalDate(data.date);
+      task.dueDate = localDate;
+    }
+    task.priority = data.priority;
+    task.subtasks = data.subtasks(task);
+
+    if (!existingTask) {
+      user.addTask(task, data.projectIndex);
+    }
+
+    closeEditor();
+  };
+
   return {
     popUp,
     clickOnCheckTask,
-    clickOnClose,
+    closeEditor,
     clickOnDatePicker,
     clickOnSelectPriority,
     clickOnDeleteSubtask,
     clickOnProjectsDropdown,
     clickOnProjectsDropdownItem,
+    saveTask,
   };
 })();
