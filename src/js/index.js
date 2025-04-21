@@ -72,6 +72,7 @@ const handlePageClicks = (e) => {
     case "complete-task-editor":
       const parentForm = target.closest("form");
       TaskEditor.clickOnCheckTask(target, parentForm);
+      break;
     case "date-picker":
       TaskEditor.clickOnDatePicker(target);
       break;
@@ -83,6 +84,9 @@ const handlePageClicks = (e) => {
       break;
     case "projects-dropdown":
       TaskEditor.clickOnProjectsDropdown(target);
+      break;
+    case "dropdown-item":
+      TaskEditor.clickOnProjectsDropdownItem(CurrentUser, target);
       break;
   }
 };

@@ -25,7 +25,6 @@ export const TaskEditor = (() => {
     }
 
     if (remove) {
-      console.log("removing...");
       priorityOption.classList.remove(classes.selected);
       input.checked = false;
       return;
@@ -259,6 +258,7 @@ export const TaskEditor = (() => {
   const _generateDropdownItem = (title, index) => {
     const item = document.createElement("div");
     item.classList.add("drop-menu-item");
+    item.setAttribute("data-click", "dropdown-item");
     item.setAttribute("data-index", `${index}`);
     const p = document.createElement("p");
     p.textContent = title;
@@ -279,15 +279,9 @@ export const TaskEditor = (() => {
     }
   };
 
-  const _loadProjectDropdown = (user, controller, projectIndex = null) => {
+  const _loadProjectsDropdown = (user, projectIndex = null) => {
     if (!user || !(user instanceof User)) {
       console.error("Please pass a valid user. It should be an User instance");
-      return;
-    }
-    if (!controller || !(controller instanceof AbortController)) {
-      console.error(
-        "Invalid abort controller. It should be an AbortController instance"
-      );
       return;
     }
     if (
@@ -309,15 +303,18 @@ export const TaskEditor = (() => {
     const projectP = dropBtn.querySelector(".task-project");
     const dropContent = dropDiv.querySelector("#project-dropdown-content");
 
+    const defaultProjectIndex = 0;
+    const index = projectIndex ? projectIndex : defaultProjectIndex;
+
     const projects = user.projects;
     for (let i = 0; i < projects.length; i++) {
       const currentProjectTitle = projects[i].title;
       const item = _generateDropdownItem(currentProjectTitle, i);
+      if (i === index) {
+        continue;
+      }
       dropContent.appendChild(item);
     }
-
-    const defaultProjectIndex = 0;
-    const index = projectIndex ? projectIndex : defaultProjectIndex;
 
     dropDiv.setAttribute("data-project-index", `${index}`);
     projectInput.value = index;
@@ -400,7 +397,7 @@ export const TaskEditor = (() => {
 
     if (!taskDiv || !taskDiv.classList.contains("task")) {
       _loadPriorityOptions(null);
-      _loadProjectDropdown(user, controller);
+      _loadProjectsDropdown(user);
       dialog.showModal();
       dialog.addEventListener("close", () => _removeFormPopulation(), {
         once: true,
@@ -420,7 +417,7 @@ export const TaskEditor = (() => {
     // task parent project
     const parentProject = task.parentProject;
     const parentProjectIndex = user.getProjectIndex(parentProject);
-    _loadProjectDropdown(user, controller, parentProjectIndex);
+    _loadProjectsDropdown(user, parentProjectIndex);
 
     // task status
     if (task.status) {
@@ -472,16 +469,8 @@ export const TaskEditor = (() => {
   };
 
   const clickOnCheckTask = (checkDiv, parentForm) => {
-    if (
-      !parentForm ||
-      parentForm.tagName !== "FORM" ||
-      !parentForm.dataset.index
-    ) {
+    if (!parentForm || parentForm.tagName !== "FORM") {
       console.error("Please pass the task editor form");
-    }
-
-    if (parentForm.dataset.index === "-1") {
-      return;
     }
 
     // input and check div
@@ -491,7 +480,6 @@ export const TaskEditor = (() => {
     const status = taskCheckDiv.classList.contains(classes.completed)
       ? false
       : true;
-
     taskCheckDiv.classList.toggle(classes.completed);
     radioInput.checked = status;
   };
@@ -625,6 +613,17 @@ export const TaskEditor = (() => {
     _openProjectsDropdown(dropdownDiv);
   };
 
+  const clickOnProjectsDropdownItem = (user, item) => {
+    if (!item || item.tagName !== "DIV" || !item.dataset.index) {
+      console.error("Please pass a valid dropdown item div");
+      return;
+    }
+    const dropdownDiv = item.closest("#project-selector");
+    const projectIndex = parseInt(item.dataset.index);
+    _loadProjectsDropdown(user, projectIndex);
+    _hideProjectsDropdown(dropdownDiv);
+  };
+
   return {
     popUp,
     clickOnCheckTask,
@@ -633,5 +632,6 @@ export const TaskEditor = (() => {
     clickOnSelectPriority,
     clickOnDeleteSubtask,
     clickOnProjectsDropdown,
+    clickOnProjectsDropdownItem,
   };
 })();

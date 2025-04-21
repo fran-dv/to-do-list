@@ -134,7 +134,12 @@
               data-completed="0"
               data-click="complete-task-editor"
             >
-              <input type="checkbox" class="hidden" name="task-check" />
+              <input
+                id="editor-task-check-input"
+                type="checkbox"
+                class="hidden"
+                name="task-check"
+              />
               <div class="task-check"></div>
             </div>
 
@@ -223,10 +228,24 @@
             </div>
           </div>
 
-          <div id="project-selector" data-click="projects-dropdown" class="dropdown">
-            <input type="text" name="project" id="project-input" class="hidden">
-            <button class="dropdown-btn" type="button"><p class="task-project"></p></button>
-            <div id="project-dropdown-content" class="dropdown-content hidden"></div>
+          <div
+            id="project-selector"
+            data-click="projects-dropdown"
+            class="dropdown"
+          >
+            <input
+              type="text"
+              name="project"
+              id="project-input"
+              class="hidden"
+            />
+            <button class="dropdown-btn" type="button">
+              <p class="task-project"></p>
+            </button>
+            <div
+              id="project-dropdown-content"
+              class="dropdown-content hidden"
+            ></div>
           </div>
 
           <div>
