@@ -93,6 +93,11 @@ const handlePageClicks = (e) => {
       TaskEditor.saveTask(CurrentUser, target.closest("#edit-task-form"));
       Content.updateContent(CurrentUser);
       break;
+    case "delete-task":
+      e.preventDefault();
+      TaskEditor.deleteTask(CurrentUser, target.closest("#edit-task-form"));
+      Content.updateContent(CurrentUser);
+      break
   }
 };
 

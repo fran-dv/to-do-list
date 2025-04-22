@@ -747,6 +747,22 @@ export const TaskEditor = (() => {
     closeEditor();
   };
 
+  const deleteTask = (user, form) => {
+    if (!(user instanceof User)) {
+      console.error("Invalid user. It must be an instance of User");
+      return;
+    }
+    if (!form || form.tagName !== "FORM" || !form.dataset.index) {
+      console.error(
+        "Invalid form. It must be a form element with data-index attr"
+      );
+      return;
+    }
+    const taskIndex = parseInt(form.dataset.index);
+    user.removeTask(taskIndex);
+    closeEditor();
+  };
+
   return {
     popUp,
     clickOnCheckTask,
@@ -757,5 +773,6 @@ export const TaskEditor = (() => {
     clickOnProjectsDropdown,
     clickOnProjectsDropdownItem,
     saveTask,
+    deleteTask,
   };
 })();
