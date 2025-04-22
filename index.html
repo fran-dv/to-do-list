@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- fonts  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap"
+      rel="stylesheet"
+    />
+    <!-- fonts -->
+    <link rel="icon" type="image/x-icon" href="8d377a2901e4245d9992.svg" />
+    <title>To do</title>
+  <script defer src="main.js"></script><link href="main.css" rel="stylesheet"></head>
+  <body>
+    <main>
+      <aside id="left-sidebar" class="">
+        <div id="user-preview">
+          <div class="photo-circle empty" data-click="user-settings">
+            <img
+              class="photo-preview"
+              src="c6b579e65da111ac6f98.svg"
+              alt="Your photo"
+            />
+          </div>
+          <h2 class="full-name">Francisco</h2>
+          <p class="username">fran-dv</p>
+        </div>
+
+        <div id="options">
+          <div class="option inbox" data-click="inbox">
+            <img src="7bec96d323ce44eaa5ba.svg" alt="Inbox" />
+            <p>Inbox</p>
+          </div>
+          <div class="option completed-tasks" data-click="finished-tasks">
+            <img src="c6bcd48ed2fbbb17a9ea.svg" alt="Completed" />
+            <p>Finished</p>
+          </div>
+        </div>
+
+        <div id="projects">
+          <div
+            class="projects-collapse collapsed"
+            data-click="collapse-projects"
+          >
+            <p class="">My Projects</p>
+            <img src="f1d3076892a92ab917bf.svg" alt="" />
+          </div>
+          <div class="user-projects">
+            <div class="add project" data-click="add-project">
+              <p>Add new</p>
+              <input
+                class="add input hidden"
+                id="new-project"
+                type="text"
+                maxlength="50"
+                placeholder="Project name"
+              />
+              <img src="2eecd80401374f620cfb.svg" alt="" />
+            </div>
+          </div>
+        </div>
+      </aside>
+      <div id="sidebar-collapse" data-click="collapse-sidebar">
+        <img src="8b30271dc9f666b7d504.svg" alt="" />
+      </div>
+
+      <div id="dynamic-content"></div>
+    </main>
+
+    <dialog id="settings-dialog">
+      <div id="exit-settings" data-click="exit-settings">
+        <img src="2eecd80401374f620cfb.svg" alt="Exit settings" />
+      </div>
+      <form action="" name="settings" id="settings">
+        <div class="settings-child photo">
+          <div class="settings-photo-preview empty" data-click="upload-photo">
+            <input
+              class="hidden"
+              type="file"
+              name="photo"
+              accept="image/*"
+              id="photo-input"
+            />
+          </div>
+        </div>
+        <div class="settings-child" data-click="new-name">
+          <h2 class="current-name"></h2>
+          <input
+            class="hidden"
+            type="text"
+            name="new-name"
+            id="new-name"
+            maxlength="25"
+          />
+        </div>
+        <div class="settings-child" data-click="new-username">
+          <p class="current-username"></p>
+          <input
+            class="hidden"
+            type="text"
+            name="new-username"
+            id="new-username"
+          />
+        </div>
+        <div id="save-changes" data-click="save-settings">
+          <button type="submit"><p>Save changes</p></button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="task-editor-dialog">
+      <div id="task-editor">
+        <div class="close-task-editor">
+          <img
+            src="2eecd80401374f620cfb.svg"
+            alt="Close editor"
+            data-click="close-editor"
+          />
+        </div>
+        <form action="" id="edit-task-form">
+          <div class="editor-header">
+            <div
+              class="check"
+              data-completed="0"
+              data-click="complete-task-editor"
+            >
+              <input
+                id="editor-task-check-input"
+                type="checkbox"
+                class="hidden"
+                name="task-check"
+              />
+              <div class="task-check"></div>
+            </div>
+
+            <div class="date" data-click="date-picker">
+              <input id="date-input" type="date" name="task-date" />
+              <div class="task-date">
+                <img src="748ff1f20a2ddaf7b0a1.svg" alt="Calendar" />
+                <p id="current-task-date">Due date</p>
+              </div>
+            </div>
+
+            <div class="priority">
+              <p>Priority</p>
+              <div
+                class="priority-option"
+                data-click="select-priority"
+                data-priority="0"
+              >
+                <input
+                  class="hidden"
+                  type="radio"
+                  name="priority"
+                  id="prior-0"
+                  value="0"
+                />
+                <img
+                  src="c76d1aa7207412770169.svg"
+                  data-priority="0"
+                  alt="priority 0 flag"
+                />
+              </div>
+              <div
+                class="priority-option"
+                data-click="select-priority"
+                data-priority="1"
+              >
+                <input
+                  class="hidden"
+                  type="radio"
+                  name="priority"
+                  id="prior-1"
+                  value="1"
+                />
+                <img
+                  src="c76d1aa7207412770169.svg"
+                  data-priority="1"
+                  alt="priority 1 flag"
+                />
+              </div>
+              <div
+                class="priority-option"
+                data-click="select-priority"
+                data-priority="2"
+              >
+                <input
+                  class="hidden"
+                  type="radio"
+                  name="priority"
+                  id="prior-2"
+                  value="2"
+                />
+                <img
+                  src="c76d1aa7207412770169.svg"
+                  data-priority="2"
+                  alt="priority 2 flag"
+                />
+              </div>
+              <div
+                class="priority-option"
+                data-click="select-priority"
+                data-priority="3"
+              >
+                <input
+                  class="hidden"
+                  type="radio"
+                  name="priority"
+                  id="prior-3"
+                  value="3"
+                />
+                <img
+                  src="c76d1aa7207412770169.svg"
+                  data-priority="3"
+                  alt="priority 3 flag"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="project-selector"
+            data-click="projects-dropdown"
+            class="dropdown"
+          >
+            <input
+              type="text"
+              name="task-project"
+              id="project-input"
+              class="hidden"
+            />
+            <button class="dropdown-btn" type="button">
+              <p class="task-project"></p>
+            </button>
+            <div
+              id="project-dropdown-content"
+              class="dropdown-content hidden"
+            ></div>
+          </div>
+
+          <div>
+            <input
+              type="text"
+              name="task-title"
+              id="task-title"
+              placeholder="Enter task title"
+            />
+          </div>
+
+          <div>
+            <textarea
+              name="task-description"
+              id="task-description"
+              placeholder="Task notes"
+              rows="4"
+              spellcheck="false"
+            ></textarea>
+          </div>
+
+          <div class="subtasks" data-amount="0">
+            <input
+              type="text"
+              id="new-subtask"
+              placeholder="Enter new subtask"
+            />
+          </div>
+
+          <div class="buttons">
+            <button
+              type="submit"
+              class="submit-button"
+              data-click="delete-task"
+              form="edit-task-form"
+            >
+              <p>Delete</p>
+            </button>
+            <button
+              type="submit"
+              class="submit-button"
+              data-click="save-task"
+              form="edit-task-form"
+            >
+              <p>Save</p>
+            </button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+  </body>
+</html>
