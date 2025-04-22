@@ -127,8 +127,18 @@ class User {
     }
 
     const task = this.tasks[index];
+
     const project = task.parentProject;
-    project.removeTask(project.getTaskIndex(task));
+
+    const projectTaskIndex = project.getTaskIndex(task);
+
+    if (projectTaskIndex === false) {
+      console.error(
+        "There were problems getting the index of the task in project"
+      );
+      return;
+    }
+    project.removeTask(projectTaskIndex);
     this.#tasks.splice(index, 1);
   }
 
@@ -218,14 +228,14 @@ class User {
     const user = new User(json.fullname);
     user.username = json.username;
     user.photo = json.photo;
-    user.projects = json.projects
-      ? json.projects.map((proj) => Project.getFromJSON(proj, user))
-      : [];
     user.tasks = json.tasks
       ? json.tasks.map((t) => Task.getFromJSON(t, user))
       : [];
+    user.projects = json.projects
+      ? json.projects.map((proj) => Project.getFromJSONWithoutTasks(proj, user))
+      : [];
 
-    Task.linkParentProjects(user);
+    Task.linkTasksToProjects(user);
     return user;
   }
 

@@ -149,9 +149,12 @@ export class Task {
   }
 
   set parentProject(project) {
+    if (project === null) {
+      this.#parentProject = null;
+      return;
+    }
     if (!(project instanceof Project)) {
       console.error("Please pass a valid Project instance");
-      this.#parentProject = null;
       return;
     }
     this.#parentProject = project;
@@ -185,36 +188,26 @@ export class Task {
     return task;
   }
 
-  static linkParentProjects(user) {
+  static linkTasksToProjects(user) {
     if (!(user instanceof User)) {
       console.error("Invalid user. It must be an instance of User");
       return;
     }
 
     user.tasks.forEach((task) => {
-      if (task._parentProjectTitle) {
-        const match = user.projects.find(
-          (proj) => proj.title === task._parentProjectTitle
-        );
-        if (match) {
-          task.parentProject = match;
-        }
-        delete task._parentProjectTitle;
-      }
-    });
+      if (!task._parentProjectTitle) return;
 
-    user.projects.forEach((project) => {
-      project.tasks.forEach((task) => {
-        if (task._parentProjectTitle) {
-          const match = user.projects.find(
-            (proj) => proj.title === task._parentProjectTitle
-          );
-          if (match) {
-            task.parentProject = match;
-          }
-          delete task._parentProjectTitle;
-        }
-      });
+      const project = user.projects.find(
+        (proj) => proj.title === task._parentProjectTitle
+      );
+
+      if (!project) {
+        console.error(`Project not found for task: ${task.title}`);
+      }
+
+      project.appendTask(task); // It sets also the parent project property
+
+      delete task._parentProjectTitle; // Clean up temp prop
     });
   }
 }

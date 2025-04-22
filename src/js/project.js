@@ -12,9 +12,20 @@ class Project {
   get title() {
     return this.#title;
   }
+  get tasks() {
+    return this.#tasks;
+  }
 
   set title(title) {
     this.#title = title;
+  }
+
+  set tasks(tasksArray) {
+    if (!this.#isTasksArray(tasksArray)) {
+      return false;
+    }
+
+    this.#tasks = tasksArray;
   }
 
   // create a new task
@@ -38,8 +49,8 @@ class Project {
       return;
     }
 
-    for (let i = 0; i < this.#tasks.length; i++) {
-      if (this.#tasks[i] === taskToFind) {
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i] === taskToFind) {
         return i;
       }
     }
@@ -67,18 +78,6 @@ class Project {
     return true;
   }
 
-  set tasks(tasksArray) {
-    if (!this.#isTasksArray(tasksArray)) {
-      return false;
-    }
-
-    this.#tasks = tasksArray;
-  }
-
-  get tasks() {
-    return this.#tasks;
-  }
-
   toJSON() {
     return {
       title: this.title,
@@ -86,16 +85,14 @@ class Project {
     };
   }
 
-  toJSONWithoutTasks() {
-    return {
-      title: this.title,
-    };
-  }
-
   static getFromJSON(json) {
     const project = new Project(json.title);
     project.tasks = json.tasks.map((taskJSON) => Task.getFromJSON(taskJSON));
     return project;
+  }
+
+  static getFromJSONWithoutTasks(json) {
+    return new Project(json.title);
   }
 }
 
