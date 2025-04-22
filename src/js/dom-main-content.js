@@ -4,6 +4,7 @@ import "/src/css/main-content.css";
 import "/src/css/tasks.css";
 import addTaskImage from "/src/assets/image/plus.svg";
 import { sortTasksByCategory } from "./sorting";
+import { Settings } from "./dom-settings";
 export class MainContent {
   #sections = {
     inbox: "inbox",
@@ -256,6 +257,7 @@ export class MainContent {
     }
   }
   updateContent(user) {
+    Settings.storeUserLocally(user);
     this.loadMainContent(user, this.currentContent);
   }
 }
