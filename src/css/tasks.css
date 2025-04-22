@@ -47,7 +47,8 @@
 }
 
 .task[data-priority="0"] .task-check:hover,
-.task[data-priority="0"][data-completed="1"] .task-check {
+.task[data-priority="0"][data-completed="1"] .task-check,
+.sub.task[data-completed="1"] .task-check {
   background-color: var(--secondary-color);
 }
 
@@ -66,6 +67,7 @@
   background-color: var(--prior-3-clr);
 }
 
+.sub.task[data-completed="1"] p,
 .task[data-completed="1"] h2 {
   text-decoration: line-through 2px;
   font-style: italic;
@@ -100,3 +102,4 @@
   width: 2rem;
   filter: var(--prior-3-filter);
 }
+

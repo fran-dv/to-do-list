@@ -763,6 +763,39 @@ export const TaskEditor = (() => {
     closeEditor();
   };
 
+  const clickOnCheckSubtask = (user, form, subtaskDiv) => {
+    if(!(user instanceof User)){
+      console.error("Invalid user. It must be an instance of User");
+      return;
+    }
+    if (!form || form.tagName !== "FORM" || !form.dataset.index) {
+      console.error(
+        "Invalid form. It must be a form element with data-index attr"
+      );
+      return;
+    }
+    if (!subtaskDiv || subtaskDiv.tagName !== "DIV" || !subtaskDiv.dataset.index){
+      console.error("Invalid subtask div");
+      return;
+    }
+  
+    const taskIndex = parseInt(form.dataset.index);
+
+    if (taskIndex === -1){
+      console.log("Please save the task before using its subtasks");
+      return;
+    }
+
+    const subtaskIndex = parseInt(subtaskDiv.dataset.index);
+    const subtask = user.tasks[taskIndex].subtasks[subtaskIndex];
+    const subtaskInput = subtaskDiv.querySelector(`#subtask-${subtaskIndex}`);
+
+    subtask.status = subtask.status ? false : true;
+    subtaskInput.checked = subtaskInput.checked ? false : true;
+    subtaskDiv.dataset.completed = subtaskDiv.dataset.completed === "0" ? "1" : "0";
+    console.log(user.tasks[taskIndex].subtasks[subtaskIndex].status, subtaskInput.checked)
+  } 
+
   return {
     popUp,
     clickOnCheckTask,
@@ -774,5 +807,6 @@ export const TaskEditor = (() => {
     clickOnProjectsDropdownItem,
     saveTask,
     deleteTask,
+    clickOnCheckSubtask,
   };
 })();

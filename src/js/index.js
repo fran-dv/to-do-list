@@ -97,7 +97,10 @@ const handlePageClicks = (e) => {
       e.preventDefault();
       TaskEditor.deleteTask(CurrentUser, target.closest("#edit-task-form"));
       Content.updateContent(CurrentUser);
-      break
+      break;
+    case "complete-subtask":
+      TaskEditor.clickOnCheckSubtask(CurrentUser, target.closest("#edit-task-form"), target.closest(".sub.task"));
+      break;
   }
 };
 
