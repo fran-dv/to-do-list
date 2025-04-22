@@ -24,7 +24,7 @@ class Project {
   }
   // append existing task
   appendTask(task) {
-    if (!(task instanceof Task)){
+    if (!(task instanceof Task)) {
       return false;
     }
 
@@ -32,14 +32,14 @@ class Project {
     this.#tasks.push(task);
   }
 
-  getTaskIndex(taskToFind){
-    if (!(taskToFind instanceof Task)){
-      console.error("Please pass a valid task.")
+  getTaskIndex(taskToFind) {
+    if (!(taskToFind instanceof Task)) {
+      console.error("Please pass a valid task.");
       return;
     }
 
-    for (let i = 0; i < this.#tasks.length; i++){
-      if (this.#tasks[i] === taskToFind){
+    for (let i = 0; i < this.#tasks.length; i++) {
+      if (this.#tasks[i] === taskToFind) {
         return i;
       }
     }
@@ -83,6 +83,12 @@ class Project {
     return {
       title: this.title,
       tasks: this.tasks.map((t) => t.toJSON()),
+    };
+  }
+
+  toJSONWithoutTasks() {
+    return {
+      title: this.title,
     };
   }
 

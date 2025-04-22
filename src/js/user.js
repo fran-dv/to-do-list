@@ -55,6 +55,13 @@ class User {
     this.#photoUrl = url;
   }
 
+  set tasks(tasksArray) {
+    if (!this.#isTasksArray(tasksArray)) {
+      return false;
+    }
+    this.#tasks = tasksArray;
+  }
+
   set projects(projectsArray) {
     if (!this.#isProjectsArray(projectsArray)) {
       return false;
@@ -83,6 +90,19 @@ class User {
     if (!(task instanceof Task)) {
       return false;
     }
+    return true;
+  }
+
+  #isTasksArray(tasksArray) {
+    if (!tasksArray || !Array.isArray(tasksArray)) {
+      return false;
+    }
+    tasksArray.forEach((task) => {
+      if (!(task instanceof Task)) {
+        return false;
+      }
+    });
+
     return true;
   }
 
@@ -187,6 +207,7 @@ class User {
       username: this.username,
       photo: this.photo,
       projects: this.projects.map((p) => p.toJSON()),
+      tasks: this.tasks.map((t) => t.toJSON()),
     };
   }
 
@@ -198,9 +219,13 @@ class User {
     user.username = json.username;
     user.photo = json.photo;
     user.projects = json.projects
-      ? json.projects.map((proj) => Project.getFromJSON(proj))
+      ? json.projects.map((proj) => Project.getFromJSON(proj, user))
+      : [];
+    user.tasks = json.tasks
+      ? json.tasks.map((t) => Task.getFromJSON(t, user))
       : [];
 
+    Task.linkParentProjects(user);
     return user;
   }
 

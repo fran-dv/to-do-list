@@ -1,5 +1,6 @@
 import { Project } from "./project";
 import { SubTask } from "./subtask";
+import { User } from "./user";
 
 export class Task {
   #title;
@@ -10,6 +11,7 @@ export class Task {
   #priority;
   #tags;
   #parentProject;
+  _parentProjectTitle; // temporarily property for the JSON handling
 
   constructor(title) {
     this.#title = title;
@@ -66,6 +68,12 @@ export class Task {
 
   #isDateValid(dateString) {
     return !isNaN(new Date(dateString));
+  }
+
+  #getLocalDate(dateString) {
+    const [year, month, day] = dateString.split("-").map(Number);
+    const localDate = new Date(year, month - 1, day);
+    return localDate;
   }
 
   set dueDate(dateString) {
@@ -158,6 +166,7 @@ export class Task {
       dueDate: this.dueDate,
       priority: this.priority,
       tags: this.tags,
+      parentProjectTitle: this.parentProject.title, // (each title is unique)
     };
   }
 
@@ -171,8 +180,41 @@ export class Task {
     task.dueDate = json.dueDate;
     task.priority = json.priority;
     task.tags = json.tags;
+    task._parentProjectTitle = json.parentProjectTitle;
 
     return task;
   }
-}
 
+  static linkParentProjects(user) {
+    if (!(user instanceof User)) {
+      console.error("Invalid user. It must be an instance of User");
+      return;
+    }
+
+    user.tasks.forEach((task) => {
+      if (task._parentProjectTitle) {
+        const match = user.projects.find(
+          (proj) => proj.title === task._parentProjectTitle
+        );
+        if (match) {
+          task.parentProject = match;
+        }
+        delete task._parentProjectTitle;
+      }
+    });
+
+    user.projects.forEach((project) => {
+      project.tasks.forEach((task) => {
+        if (task._parentProjectTitle) {
+          const match = user.projects.find(
+            (proj) => proj.title === task._parentProjectTitle
+          );
+          if (match) {
+            task.parentProject = match;
+          }
+          delete task._parentProjectTitle;
+        }
+      });
+    });
+  }
+}
